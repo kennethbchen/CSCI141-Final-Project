@@ -1,3 +1,5 @@
+package game;
+
 import entities.*;
 
 public class GameState {
@@ -29,7 +31,7 @@ public class GameState {
                 if(gameBoard[x][y] instanceof Creature && 
                 !(gameBoard[x][y] instanceof Player) ) {
                     Creature thing = (Creature) gameBoard[x][y];
-                    thing.move();
+                    thing.move(this);
                 }
             }
         }   

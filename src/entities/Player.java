@@ -1,9 +1,28 @@
 package entities;
 
+import game.GameState;
+
 public class Player extends Creature {
 
+    private int keys;
+
+    public int getKeys() {
+        return keys;
+    }
+
+    public void addKey() {
+        keys++;
+    }
+
+    public void subKey() {
+        if(keys > 0) {
+            keys--;
+        }
+    }
+
+
     @Override
-    public void move() {
+    public void move(GameState state) {
         // TODO Auto-generated method stub
 
     }
