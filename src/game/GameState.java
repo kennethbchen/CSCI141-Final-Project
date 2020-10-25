@@ -10,8 +10,20 @@ public class GameState {
     // gameBoard[0,0] is world coordinates (0,0)
     private Entity[][] gameBoard;
 
-    public GameState() {
+    public GameState(int boardLength, int boardHeight) {
+        this.boardLength = boardLength;
+        this.boardHeight = boardHeight;
 
+        gameBoard = new Entity[boardLength][boardHeight];
+        // for(Entity[] col: gameBoard) {
+        //     for(Entity thing: col) {
+        //         thing = null;
+        //     }
+        // }
+    }
+
+    public GameState() {
+        this(5,5);
     }
 
     // 0-Indexed
@@ -35,5 +47,9 @@ public class GameState {
                 }
             }
         }   
+    }
+
+    public void renderBoard() {
+
     }
 }
