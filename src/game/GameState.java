@@ -2,6 +2,8 @@ package game;
 
 import entities.*;
 
+import javax.swing.*;
+
 public class GameState {
     
     private int boardLength;
@@ -15,15 +17,15 @@ public class GameState {
         this.boardHeight = boardHeight;
 
         gameBoard = new Entity[boardLength][boardHeight];
-        // for(Entity[] col: gameBoard) {
-        //     for(Entity thing: col) {
-        //         thing = null;
-        //     }
-        // }
+
     }
 
     public GameState() {
         this(5,5);
+    }
+
+    protected Entity[][] getBoard() {
+        return gameBoard;
     }
 
     // 0-Indexed
@@ -49,7 +51,4 @@ public class GameState {
         }   
     }
 
-    public void renderBoard() {
-
-    }
 }

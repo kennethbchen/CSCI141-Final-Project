@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 
 
-public class GBUtility {
+public class GridBagUtility {
     public static void addGBComponent(Container parent, Component comp, int x, int y, int w, int h) {
         addGBComponent(parent, comp, x, y, w, h, GridBagConstraints.BOTH, GridBagConstraints.CENTER, 1, 1, 0, 0, 0, 0);
     }
