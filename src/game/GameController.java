@@ -3,6 +3,8 @@ package game;
 import entities.*;
 
 import java.awt.*;
+import java.awt.image.*;
+import java.awt.geom.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.KeyEvent;
@@ -27,10 +29,11 @@ public class GameController extends JPanel{
     }
 
     public void startGame() {
-        gameBoard = new Entity[16][16];
+        
 
         player = new Player();
         // Generate Board
+        gameBoard = BoardGenerator.generateBoard(player);
 
         inGame = true;
         repaint();
@@ -68,7 +71,7 @@ public class GameController extends JPanel{
     private void drawGame(Graphics g) {
         // Boilerplate
         Graphics2D graphics = (Graphics2D) g;
-        RenderingHints rh = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
+        RenderingHints rh = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         rh.put(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
         graphics.setRenderingHints(rh);
 
@@ -76,14 +79,22 @@ public class GameController extends JPanel{
         double screenWidth = size.getWidth();
         double screenHeight = size.getHeight();
 
-        
-        double scaleFactor = (screenWidth / gameBoard.length);
         int boxLength = (int)((screenHeight) / gameBoard.length);
         int padding = (int) ((screenWidth - (boxLength * gameBoard.length)) / 2);
-        System.out.println(boxLength * gameBoard.length);
+
         for (int column = 0; column < gameBoard.length; column++) {
             for(int row = 0; row < gameBoard[column].length; row++){
-                graphics.drawRect((int)(column * boxLength) + padding, (int)(row * boxLength), (int)boxLength, (int)boxLength);
+                graphics.drawRect((column * boxLength) + padding, row * boxLength, boxLength, boxLength);
+                if(gameBoard[column][row] != null) {
+
+                    // Image Scaling from https://blog.idrsolutions.com/2019/05/image-scaling-in-java/
+                    BufferedImage scaled = new BufferedImage(boxLength, boxLength, BufferedImage.TYPE_INT_ARGB);
+                    final AffineTransform at = AffineTransform.getScaleInstance(boxLength / 16.0, boxLength / 16.0);
+                    final AffineTransformOp ato = new AffineTransformOp(at, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
+                    scaled = ato.filter((BufferedImage) gameBoard[column][row].getSprite(), scaled);
+
+                    graphics.drawImage(scaled, (column * boxLength) + padding, row * boxLength, this);
+                }
             }
         }
 
