@@ -12,29 +12,26 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JPanel;
 
-public class GameController extends JPanel{
+public class GameController extends JPanel {
 
-    private int boardLength;
-    private int boardHeight;
+    // private int boardLength;
+    // private int boardHeight;
 
-    // gameBoard[0,0] is world coordinates (0,0)
-    private Entity[][] gameBoard;
+    // // gameBoard[0,0] is world coordinates (0,0)
+    // private Entity[][] gameBoard;
 
-    private Player player;
+    // private Player player;
+
+    GameState state;
 
     private boolean inGame = false;
 
     public GameController() {
+        state = new GameState();
         addKeyListener(new Listener());
     }
 
     public void startGame() {
-        
-
-        player = new Player();
-        // Generate Board
-        gameBoard = BoardGenerator.generateBoard(player);
-
         inGame = true;
         repaint();
     }
@@ -79,19 +76,19 @@ public class GameController extends JPanel{
         double screenWidth = size.getWidth();
         double screenHeight = size.getHeight();
 
-        int boxLength = (int)((screenHeight) / gameBoard.length);
-        int padding = (int) ((screenWidth - (boxLength * gameBoard.length)) / 2);
+        int boxLength = (int)((screenHeight) / state.getBoard().length);
+        int padding = (int) ((screenWidth - (boxLength * state.getBoard().length)) / 2);
 
-        for (int column = 0; column < gameBoard.length; column++) {
-            for(int row = 0; row < gameBoard[column].length; row++){
+        for (int column = 0; column < state.getBoard().length; column++) {
+            for(int row = 0; row < state.getBoard()[column].length; row++){
                 graphics.drawRect((column * boxLength) + padding, row * boxLength, boxLength, boxLength);
-                if(gameBoard[column][row] != null) {
-
+                if(state.getBoard()[column][row] != null) {
+                    
                     // Image Scaling from https://blog.idrsolutions.com/2019/05/image-scaling-in-java/
                     BufferedImage scaled = new BufferedImage(boxLength, boxLength, BufferedImage.TYPE_INT_ARGB);
-                    final AffineTransform at = AffineTransform.getScaleInstance(boxLength / 16.0, boxLength / 16.0);
-                    final AffineTransformOp ato = new AffineTransformOp(at, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
-                    scaled = ato.filter((BufferedImage) gameBoard[column][row].getSprite(), scaled);
+                    final AffineTransform transform = AffineTransform.getScaleInstance(boxLength / 16.0, boxLength / 16.0);
+                    final AffineTransformOp ato = new AffineTransformOp(transform, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
+                    scaled = ato.filter(state.getBoard()[column][row].getSprite(), scaled);
 
                     graphics.drawImage(scaled, (column * boxLength) + padding, row * boxLength, this);
                 }
@@ -113,13 +110,33 @@ public class GameController extends JPanel{
 
             // Game inputs
             if(inGame) {
-
+                switch (e.getKeyCode()) {
+                    case(KeyEvent.VK_UP):
+                        state.getPlayer().move(state, Direction.UP);
+                        state.takeTurn();
+                        repaint();
+                        break;
+                    case(KeyEvent.VK_DOWN):
+                        state.getPlayer().move(state, Direction.DOWN);
+                        state.takeTurn();
+                        repaint();
+                        break;
+                    case(KeyEvent.VK_LEFT):
+                        state.getPlayer().move(state, Direction.LEFT);
+                        state.takeTurn();
+                        repaint();
+                        break;
+                    case(KeyEvent.VK_RIGHT):
+                        state.getPlayer().move(state, Direction.RIGHT);
+                        state.takeTurn();
+                        repaint();
+                        break;
+                }
             } else {
                 // Title Screen inputs
                 startGame();
             }
 
-            System.out.println("Key pressed " + e.getKeyCode());
         }
 
     }

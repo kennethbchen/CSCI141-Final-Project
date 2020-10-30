@@ -1,10 +1,9 @@
 package entities;
 
-import java.awt.Image;
 import java.io.*;
 
 import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
+
 
 import game.GameState;
 
@@ -30,10 +29,12 @@ public class Player extends Creature {
         }
     }
 
-    @Override
-    public void move(GameState state) {
-        // TODO Auto-generated method stub
-
+    public void move(GameState state, Direction direction) {
+        // Temp does not check for other entities
+        if(direction == Direction.UP && state.inBoard(getXPos(), getYPos() + 1)) {
+            System.out.println("Moved Up");
+            setYPos(getYPos() + 1);
+        }
     }
 
     @Override

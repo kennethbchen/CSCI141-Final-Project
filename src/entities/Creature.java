@@ -1,6 +1,6 @@
 package entities;
 
-import game.GameState;
+import game.GameController;
 
 public abstract class Creature extends Entity {
     
@@ -61,7 +61,6 @@ public abstract class Creature extends Entity {
         }
     }
 
-    abstract public void move(GameState state);
     abstract public void attack(Creature target);
 
 }
