@@ -58,10 +58,14 @@ public class GameState {
     public void takeTurn() {
         for(int x = 0; x < gameBoard.length; x++) {
             for(int y = 0; y < gameBoard[x].length; y++) {
-                // Call move() On every Creature that is not the player
+                // Call move() On every AICreature and update their position
                 if(gameBoard[x][y] instanceof AICreature) {
+                    int prevX = gameBoard[x][y].getXPos();
+                    int prevY = gameBoard[x][y].getYPos();
                     AICreature thing = (AICreature) gameBoard[x][y];
                     thing.move(this);
+                    gameBoard[prevX][prevY] = null;
+                    gameBoard[thing.getXPos()][thing.getYPos()] = thing;
                 }
             }
         }   

@@ -71,7 +71,7 @@ public class GameController extends JPanel {
         RenderingHints rh = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         rh.put(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
         graphics.setRenderingHints(rh);
-
+        
         Dimension size = getSize();
         double screenWidth = size.getWidth();
         double screenHeight = size.getHeight();
@@ -110,27 +110,34 @@ public class GameController extends JPanel {
 
             // Game inputs
             if(inGame) {
-                switch (e.getKeyCode()) {
-                    case(KeyEvent.VK_UP):
-                        state.getPlayer().move(state, Direction.UP);
-                        state.takeTurn();
-                        repaint();
-                        break;
-                    case(KeyEvent.VK_DOWN):
-                        state.getPlayer().move(state, Direction.DOWN);
-                        state.takeTurn();
-                        repaint();
-                        break;
-                    case(KeyEvent.VK_LEFT):
-                        state.getPlayer().move(state, Direction.LEFT);
-                        state.takeTurn();
-                        repaint();
-                        break;
-                    case(KeyEvent.VK_RIGHT):
-                        state.getPlayer().move(state, Direction.RIGHT);
-                        state.takeTurn();
-                        repaint();
-                        break;
+                int prevX = state.getPlayer().getXPos();
+                int prevY = state.getPlayer().getYPos();
+
+                if (e.getKeyCode() == KeyEvent.VK_UP || 
+                        e.getKeyCode() == KeyEvent.VK_DOWN || 
+                            e.getKeyCode() == KeyEvent.VK_LEFT ||
+                                e.getKeyCode() == KeyEvent.VK_RIGHT) {
+                                    
+                    switch (e.getKeyCode()) {
+                        case(KeyEvent.VK_UP):
+                            state.getPlayer().move(state, Direction.UP);
+                            break;
+                        case(KeyEvent.VK_DOWN):
+                            state.getPlayer().move(state, Direction.DOWN);
+                            break;
+                        case(KeyEvent.VK_LEFT):
+                            state.getPlayer().move(state, Direction.LEFT);
+                            break;
+                        case(KeyEvent.VK_RIGHT):
+                            state.getPlayer().move(state, Direction.RIGHT);
+                            break;    
+                    }
+
+                    state.getBoard()[prevX][prevY] = null;
+                    state.getBoard()[state.getPlayer().getXPos()][state.getPlayer().getYPos()] = state.getPlayer();
+                    state.takeTurn();
+                    repaint();
+                
                 }
             } else {
                 // Title Screen inputs

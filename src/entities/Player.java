@@ -31,9 +31,14 @@ public class Player extends Creature {
 
     public void move(GameState state, Direction direction) {
         // Temp does not check for other entities
-        if(direction == Direction.UP && state.inBoard(getXPos(), getYPos() + 1)) {
-            System.out.println("Moved Up");
+        if(direction == Direction.UP && state.inBoard(getXPos(), getYPos() - 1)) {
+            setYPos(getYPos() - 1);
+        } else if(direction == Direction.DOWN && state.inBoard(getXPos(), getYPos() + 1)) {
             setYPos(getYPos() + 1);
+        } else if(direction == Direction.LEFT && state.inBoard(getXPos() - 1, getYPos())) {
+            setXPos(getXPos() - 1);
+        } else if(direction == Direction.RIGHT && state.inBoard(getXPos() + 1, getYPos())) {
+            setXPos(getXPos() + 1);
         }
     }
 
