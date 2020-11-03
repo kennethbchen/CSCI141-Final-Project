@@ -126,11 +126,8 @@ public class GameController extends JPanel {
         public void keyTyped(KeyEvent e) {}
 
         @Override
-        public void keyPressed(KeyEvent e) {}
-
-        @Override
-        public void keyReleased(KeyEvent e) {
-
+        public void keyPressed(KeyEvent e) {
+            
             // Game inputs
             if(inGame) {
                 int prevX = state.getPlayer().getXPos();
@@ -157,8 +154,7 @@ public class GameController extends JPanel {
                     }
 
                     // Update position on the board
-                    state.getBoard()[prevX][prevY] = null;
-                    state.getBoard()[state.getPlayer().getXPos()][state.getPlayer().getYPos()] = state.getPlayer();
+                    state.updateEntityPosition(state.getPlayer(), prevX, prevY);
                     state.takeTurn();
                     repaint();
                 
@@ -170,6 +166,9 @@ public class GameController extends JPanel {
             }
 
         }
+
+        @Override
+        public void keyReleased(KeyEvent e) {}
 
     }
 

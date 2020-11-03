@@ -4,10 +4,6 @@ import java.io.*;
 import javax.imageio.ImageIO;
 
 public class Wall extends Entity {
-
-    public Wall() {
-        loadSprite();
-    }
     
     @Override
     public void loadSprite() {

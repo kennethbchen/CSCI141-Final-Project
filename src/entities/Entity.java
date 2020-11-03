@@ -9,6 +9,10 @@ public abstract class Entity {
     
     BufferedImage sprite;
 
+    public Entity() {
+        loadSprite();
+    }
+
     public int getXPos() {
         return xPos;
     }

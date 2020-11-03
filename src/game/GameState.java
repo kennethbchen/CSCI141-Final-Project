@@ -1,5 +1,8 @@
 package game;
 
+import java.util.List;
+import java.util.ArrayList;
+
 import entities.*;
 
 public class GameState {
@@ -12,15 +15,18 @@ public class GameState {
     
     private Player player;
 
+    private ArrayList<AICreature> enemies;
+    
     public GameState(int boardLength, int boardHeight) {
         this.boardLength = boardLength;
         this.boardHeight = boardHeight;
 
+        gameBoard = new Entity[boardLength][boardHeight];
+
         player = new Player();
+        enemies = new ArrayList<AICreature>();
 
-        gameBoard = BoardGenerator.generateTestBoard(player, boardLength, boardHeight);
-
-        
+        BoardGenerator.generateTestBoard(this);
 
     }
 
@@ -36,6 +42,46 @@ public class GameState {
         return player;
     }
 
+    protected void addEntity(Entity entity, int x, int y) {
+        if(isEmptySpace(x, y)) {
+            entity.setPosition(x, y);
+            gameBoard[x][y] = entity;
+
+            if(entity instanceof AICreature) {
+                enemies.add((AICreature) entity);
+            }
+        }
+        
+    }
+
+    protected void removeEntity(int x, int y) {
+        // If it's a creature, remove it from the list of creatures
+        if(gameBoard[x][y] instanceof AICreature) {
+            // May not work with multiple enemies  of the same type 
+            // depending on how .equals() works
+            enemies.remove((AICreature) gameBoard[x][y]);
+        }
+        // Remove it from the board
+        gameBoard[x][y] = null;
+    }
+
+    // It is assumed that the entity has updated their internal position 
+    // accordingly before this method call
+    protected void updateEntityPosition(Entity entity, int prevX, int prevY) {
+        gameBoard[prevX][prevY] = null;
+        gameBoard[entity.getXPos()][entity.getYPos()] = entity;
+    }
+
+    // 0-Indexed
+    public boolean inBoard(int x, int y) {
+        if(x <= boardLength - 1 && x >= 0 && 
+                y <= boardHeight - 1 && y >= 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     // 0-Indexed
     public Entity getAtPos(int x, int y) {
         // Check if the inputs are in bounds
@@ -46,16 +92,8 @@ public class GameState {
         }
     }
 
-    public boolean inBoard(int x, int y) {
-        if(x <= boardLength - 1 && x >= 0 && 
-                y <= boardHeight - 1 && y >= 0) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public boolean validMoveSpace(int x, int y) {
+    // 0-Indexed
+    public boolean isEmptySpace(int x, int y) {
         if(inBoard(x, y) && getAtPos(x, y) == null) {
             return true;
         } else {
@@ -63,21 +101,21 @@ public class GameState {
         }
     }
 
+    
+
     public void takeTurn() {
-        for(int x = 0; x < gameBoard.length; x++) {
-            for(int y = 0; y < gameBoard[x].length; y++) {
-                // Call move() On every AICreature and update their position
-                // Maybe just have list of enemies?
-                if(gameBoard[x][y] instanceof AICreature) {
-                    int prevX = gameBoard[x][y].getXPos();
-                    int prevY = gameBoard[x][y].getYPos();
-                    AICreature thing = (AICreature) gameBoard[x][y];
-                    thing.move(this);
-                    gameBoard[prevX][prevY] = null;
-                    gameBoard[thing.getXPos()][thing.getYPos()] = thing;
-                }
+        for(int i = 0; i < enemies.size(); i++) {
+            // Check if the enemy is dead
+            if(enemies.get(i).isDead()) {
+                // It's dead, remove it
+                removeEntity(enemies.get(i).getXPos(), enemies.get(i).getYPos());
+            } else {
+                // It's alive, let it move
+                System.out.println("Moving");
+                enemies.get(i).move(this);
             }
-        }   
+            
+        }
     }
 
 }

@@ -35,6 +35,14 @@ public abstract class Creature extends Entity {
         return maxHealth;
     }
 
+    public boolean isDead() {
+        if(health <= 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public void setMaxHealth(int maxHealth) {
         if(maxHealth >= 1) {
             this.maxHealth = maxHealth;
@@ -60,7 +68,5 @@ public abstract class Creature extends Entity {
             this.defense = defense;
         }
     }
-
-    abstract public void attack(Creature target);
 
 }

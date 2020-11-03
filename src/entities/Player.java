@@ -1,7 +1,6 @@
 package entities;
 
-import java.io.*;
-
+import java.io.File;
 import javax.imageio.ImageIO;
 
 
@@ -12,8 +11,11 @@ public class Player extends Creature {
     private int keys;
 
     public Player() {
-        // TODO Init Stats        
-        loadSprite();
+        // Default Stats
+        setMaxHealth(10);
+        heal(10);
+        setAttack(1);
+        setDefense(0);
     }
 
     public int getKeys() {
@@ -57,16 +59,11 @@ public class Player extends Creature {
                 setXPos(getXPos() + dx);
                 setYPos(getYPos() + dy);
             } else if (state.getAtPos(getXPos() + dx, getYPos() + dy) instanceof Creature) {
-                // If there's a creature in the way, attack it
+                Creature target = (Creature) state.getAtPos(getXPos() + dx, getYPos() + dy);
+                target.takeDamage(getAttack());
             } // Other checks for moving into objects like keys go here
         }
     
-    }
-
-    @Override
-    public void attack(Creature target) {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
