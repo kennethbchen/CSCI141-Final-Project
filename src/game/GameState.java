@@ -1,6 +1,5 @@
 package game;
 
-import java.util.List;
 import java.util.ArrayList;
 
 import entities.*;
@@ -111,7 +110,6 @@ public class GameState {
                 removeEntity(enemies.get(i).getXPos(), enemies.get(i).getYPos());
             } else {
                 // It's alive, let it move
-                System.out.println("Moving");
                 enemies.get(i).move(this);
             }
             

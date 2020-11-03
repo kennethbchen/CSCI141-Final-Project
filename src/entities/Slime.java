@@ -15,7 +15,7 @@ public class Slime extends AICreature {
     }
     @Override
     public void move(GameState state) {
-        // TODO Auto-generated method stub
+        // TODO Add AI
 
     }
 

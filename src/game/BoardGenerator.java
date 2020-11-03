@@ -1,7 +1,5 @@
 package game;
 
-import java.util.ArrayList;
-
 import entities.*;
 
 public class BoardGenerator {

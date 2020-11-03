@@ -1,7 +1,5 @@
 package entities;
 
-import game.GameController;
-
 public abstract class Creature extends Entity {
     
     //Stats

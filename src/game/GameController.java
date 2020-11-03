@@ -5,10 +5,8 @@ import entities.*;
 import java.awt.*;
 import java.awt.image.*;
 import java.awt.geom.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.KeyEvent;
-import java.awt.event.ActionListener;
 
 import javax.swing.JPanel;
 
