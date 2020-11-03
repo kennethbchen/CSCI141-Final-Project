@@ -8,6 +8,9 @@ public class BoardGenerator {
         //Generate a temp board for testing
         Entity[][] output = new Entity[16][16];
         output[1][1] = player;
+
+        output[2][2] = new Wall();
+        
         player.setPosition(1, 1);
         return output;
     }

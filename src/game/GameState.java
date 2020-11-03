@@ -55,10 +55,19 @@ public class GameState {
         }
     }
 
+    public boolean validMoveSpace(int x, int y) {
+        if(inBoard(x, y) && getAtPos(x, y) == null) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public void takeTurn() {
         for(int x = 0; x < gameBoard.length; x++) {
             for(int y = 0; y < gameBoard[x].length; y++) {
                 // Call move() On every AICreature and update their position
+                // Maybe just have list of enemies?
                 if(gameBoard[x][y] instanceof AICreature) {
                     int prevX = gameBoard[x][y].getXPos();
                     int prevY = gameBoard[x][y].getYPos();

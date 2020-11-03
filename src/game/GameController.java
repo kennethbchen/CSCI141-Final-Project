@@ -14,14 +14,6 @@ import javax.swing.JPanel;
 
 public class GameController extends JPanel {
 
-    // private int boardLength;
-    // private int boardHeight;
-
-    // // gameBoard[0,0] is world coordinates (0,0)
-    // private Entity[][] gameBoard;
-
-    // private Player player;
-
     GameState state;
 
     private boolean inGame = false;
