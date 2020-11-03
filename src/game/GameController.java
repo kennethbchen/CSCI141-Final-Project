@@ -73,6 +73,7 @@ public class GameController extends JPanel {
 
         for (int column = 0; column < state.getBoard().length; column++) {
             for(int row = 0; row < state.getBoard()[column].length; row++){
+                graphics.setColor(Color.GRAY);
                 graphics.drawRect((column * boxLength) + padding, row * boxLength, boxLength, boxLength);
                 if(state.getBoard()[column][row] != null) {
                     
