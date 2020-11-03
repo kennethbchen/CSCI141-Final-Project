@@ -14,6 +14,8 @@ import javax.swing.JPanel;
 
 public class GameController extends JPanel {
 
+    private final int GRID_CELL_LENGTH = 15;
+
     GameState state;
 
     private boolean inGame = false;
@@ -68,23 +70,49 @@ public class GameController extends JPanel {
         double screenWidth = size.getWidth();
         double screenHeight = size.getHeight();
 
-        int boxLength = (int)((screenHeight) / state.getBoard().length);
-        int padding = (int) ((screenWidth - (boxLength * state.getBoard().length)) / 2);
+        // Box lengths for grid is always a proportion of height and grid cell size
+        int boxLength = (int)((screenHeight) / GRID_CELL_LENGTH);
+        int padding = (int) ((screenWidth - (boxLength * GRID_CELL_LENGTH)) / 2);
 
-        for (int column = 0; column < state.getBoard().length; column++) {
-            for(int row = 0; row < state.getBoard()[column].length; row++){
+        // Origins in game state space
+        int renderOriginX = state.getPlayer().getXPos() - GRID_CELL_LENGTH / 2;
+        int renderOriginY = state.getPlayer().getYPos() - GRID_CELL_LENGTH / 2;
+
+        // Loops through game state space
+        // rows and columns are game state space (array indexes)
+        // row/column - renderOriginX/Y are screen space coordinates
+        for(int column = renderOriginX; column < renderOriginX + GRID_CELL_LENGTH; column++) {
+            
+            for(int row = renderOriginY; row < renderOriginY + GRID_CELL_LENGTH; row++) {
+                
                 graphics.setColor(Color.GRAY);
-                graphics.drawRect((column * boxLength) + padding, row * boxLength, boxLength, boxLength);
-                if(state.getBoard()[column][row] != null) {
-                    
-                    // Image Scaling from https://blog.idrsolutions.com/2019/05/image-scaling-in-java/
-                    BufferedImage scaled = new BufferedImage(boxLength, boxLength, BufferedImage.TYPE_INT_ARGB);
-                    final AffineTransform transform = AffineTransform.getScaleInstance(boxLength / 16.0, boxLength / 16.0);
-                    final AffineTransformOp ato = new AffineTransformOp(transform, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
-                    scaled = ato.filter(state.getBoard()[column][row].getSprite(), scaled);
+                // Draws in screen space
+                if (state.inBoard(column, row)) {
+                    // Inside the board, draw grid
+                    graphics.setBackground(Color.WHITE);
+                    graphics.drawRect(( (column - renderOriginX) * boxLength) + padding, (row - renderOriginY) * boxLength, boxLength, boxLength);
 
-                    graphics.drawImage(scaled, (column * boxLength) + padding, row * boxLength, this);
+                    // If the index (column,row) has something in it (Player, wall, enemy, whatever)
+                    // Draw a scaled image
+                    // The grid is drawn centered on the player
+                    if(state.getAtPos(column, row) != null) {
+                        
+                        // Image Scaling from https://blog.idrsolutions.com/2019/05/image-scaling-in-java/
+                        BufferedImage scaled = new BufferedImage(boxLength, boxLength, BufferedImage.TYPE_INT_ARGB);
+                        final AffineTransform transform = AffineTransform.getScaleInstance( (double) boxLength / GRID_CELL_LENGTH, (double) boxLength / GRID_CELL_LENGTH);
+                        final AffineTransformOp ato = new AffineTransformOp(transform, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
+                        scaled = ato.filter(state.getBoard()[column][row].getSprite(), scaled);
+    
+                        graphics.drawImage(scaled, ( (column - renderOriginX) * boxLength) + padding, (row - renderOriginY) * boxLength, this);
+                    }
+
+                } else {
+                    // Outside the board, fill gray like the walls
+                    graphics.setBackground(Color.GRAY);
+                    graphics.fillRect(( (column - renderOriginX) * boxLength) + padding, (row - renderOriginY) * boxLength, boxLength, boxLength);
                 }
+
+                
             }
         }
 
