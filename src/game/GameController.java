@@ -14,7 +14,8 @@ import javax.swing.JPanel;
 
 public class GameController extends JPanel {
 
-    private final int GRID_CELL_LENGTH = 15;
+    private final int RENDER_GRID_SIZE = 15;
+    private final int SPRITE_SIZE = 16;
 
     GameState state;
 
@@ -71,19 +72,19 @@ public class GameController extends JPanel {
         double screenHeight = size.getHeight();
 
         // Box lengths for grid is always a proportion of height and grid cell size
-        int boxLength = (int)((screenHeight) / GRID_CELL_LENGTH);
-        int padding = (int) ((screenWidth - (boxLength * GRID_CELL_LENGTH)) / 2);
+        int boxLength = (int)( screenHeight / RENDER_GRID_SIZE);
+        int padding = (int) ((screenWidth - (boxLength * RENDER_GRID_SIZE)) / 2);
 
         // Origins in game state space
-        int renderOriginX = state.getPlayer().getXPos() - GRID_CELL_LENGTH / 2;
-        int renderOriginY = state.getPlayer().getYPos() - GRID_CELL_LENGTH / 2;
+        int renderOriginX = state.getPlayer().getXPos() - RENDER_GRID_SIZE / 2;
+        int renderOriginY = state.getPlayer().getYPos() - RENDER_GRID_SIZE / 2;
 
         // Loops through game state space
         // rows and columns are game state space (array indexes)
         // row/column - renderOriginX/Y are screen space coordinates
-        for(int column = renderOriginX; column < renderOriginX + GRID_CELL_LENGTH; column++) {
+        for(int column = renderOriginX; column < renderOriginX + RENDER_GRID_SIZE; column++) {
             
-            for(int row = renderOriginY; row < renderOriginY + GRID_CELL_LENGTH; row++) {
+            for(int row = renderOriginY; row < renderOriginY + RENDER_GRID_SIZE; row++) {
                 
                 graphics.setColor(Color.GRAY);
                 // Draws in screen space
@@ -99,17 +100,18 @@ public class GameController extends JPanel {
                         
                         // Image Scaling from https://blog.idrsolutions.com/2019/05/image-scaling-in-java/
                         BufferedImage scaled = new BufferedImage(boxLength, boxLength, BufferedImage.TYPE_INT_ARGB);
-                        final AffineTransform transform = AffineTransform.getScaleInstance( (double) boxLength / GRID_CELL_LENGTH, (double) boxLength / GRID_CELL_LENGTH);
+                        final AffineTransform transform = AffineTransform.getScaleInstance( (double) boxLength / SPRITE_SIZE, (double) boxLength / SPRITE_SIZE);
                         final AffineTransformOp ato = new AffineTransformOp(transform, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
                         scaled = ato.filter(state.getBoard()[column][row].getSprite(), scaled);
     
-                        graphics.drawImage(scaled, ( (column - renderOriginX) * boxLength) + padding, (row - renderOriginY) * boxLength, this);
+                        graphics.drawImage(scaled, ((column - renderOriginX) * boxLength) + padding, (row - renderOriginY) * boxLength, this);
                     }
 
                 } else {
                     // Outside the board, fill gray like the walls
                     graphics.setBackground(Color.GRAY);
-                    graphics.fillRect(( (column - renderOriginX) * boxLength) + padding, (row - renderOriginY) * boxLength, boxLength, boxLength);
+                    // Add 1 to the length of the gray rectangles because they were too small?
+                    graphics.fillRect(((column - renderOriginX) * boxLength) + padding, (row - renderOriginY) * boxLength, boxLength + 1, boxLength + 1);
                 }
 
                 
@@ -154,12 +156,14 @@ public class GameController extends JPanel {
                             break;    
                     }
 
+                    // Update position on the board
                     state.getBoard()[prevX][prevY] = null;
                     state.getBoard()[state.getPlayer().getXPos()][state.getPlayer().getYPos()] = state.getPlayer();
                     state.takeTurn();
                     repaint();
                 
                 }
+                
             } else {
                 // Title Screen inputs
                 startGame();

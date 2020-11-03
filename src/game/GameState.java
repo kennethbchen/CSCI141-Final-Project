@@ -18,14 +18,14 @@ public class GameState {
 
         player = new Player();
 
-        gameBoard = BoardGenerator.generateBoard(player);
+        gameBoard = BoardGenerator.generateTestBoard(player, boardLength, boardHeight);
 
         
 
     }
 
     public GameState() {
-        this(16,16);
+        this(32,32);
     }
 
     protected Entity[][] getBoard() {

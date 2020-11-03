@@ -4,9 +4,10 @@ import entities.*;
 
 public class BoardGenerator {
 
-    public static Entity[][] generateBoard(Player player) {
+    // Test board with stuff in it to test mechanics
+    public static Entity[][] generateTestBoard(Player player, int length, int height) {
         //Generate a temp board for testing
-        Entity[][] output = new Entity[16][16];
+        Entity[][] output = new Entity[length][height];
         output[1][1] = player;
 
         output[2][2] = new Wall();
