@@ -103,6 +103,14 @@ public class GameController extends JPanel {
                         scaled = ato.filter(state.getBoard()[column][row].getSprite(), scaled);
     
                         graphics.drawImage(scaled, ((column - renderOriginX) * boxLength) + padding, (row - renderOriginY) * boxLength, this);
+
+                        // Rendering health bar
+                        if(state.getAtPos(column, row) instanceof Creature) {
+                            Creature thing = (Creature) state.getAtPos(column, row);
+                            if(thing.getHealth() != thing.getMaxHealth()) {
+                                // Render health function here, Scale independant
+                            }
+                        }
                     }
 
                 } else {
@@ -115,6 +123,10 @@ public class GameController extends JPanel {
                 
             }
         }
+
+    }
+
+    private void renderHealth(Creature creature) {
 
     }
 
