@@ -27,7 +27,7 @@ public class GameState {
 
         enemies = new ArrayList<AICreature>();
 
-        BoardGenerator.generateTestFloor(this);
+        //BoardGenerator.generateTestFloor(this);
         BoardGenerator.generateFloor(this);
 
     }

@@ -12,7 +12,7 @@ import entities.*;
 
 public class BoardGenerator {
 
-    private static final String ROOT_ROOM_PATH = "rooms";
+    private static final String ROOT_ROOM_PATH = "src/rooms/";
 
     private static final int ROOM_SIZE = 8; // nxn room
 
@@ -32,6 +32,7 @@ public class BoardGenerator {
     public static void generateTestFloor(GameState state) {
 
         state.addEntity(state.getPlayer(), 1, 1);
+        state.addEntity(new Wall(), 1, 5);
         state.addEntity(new Wall(), 2, 2);
         state.addEntity(new Wall(), 3, 2);
         state.addEntity(new Slime(), 3, 3);
@@ -39,12 +40,23 @@ public class BoardGenerator {
     }
 
     public static void generateFloor(GameState state) {
+        
         try {
-            for(Entity[] line: readRoom(BoardGenerator.class.getResource(ROOT_ROOM_PATH + "/testRoom.txt").toString())){
-                for(Entity thing: line) {
-                    System.out.println(thing.getClass().getName());
+            Entity[][] room = readRoom(ROOT_ROOM_PATH + "testRoom.txt");
+            int originX = 0;
+            int originY = 0;
+            for(int column = originX; column < originX + ROOM_SIZE; column++) {
+                for(int row = originY; row < originY + ROOM_SIZE; row++) {
+                    state.getBoard()[column][row] = room[column - originX][row - originY];
+                    if(state.getBoard()[column][row] instanceof Player) {
+                        state.getPlayer().setPosition(column, row);
+                    }
+                    
+                    
                 }
             }
+            
+            
         } catch (IOException e) {
             System.out.println("Error occured while generating floor");
             System.out.println(e);
@@ -52,6 +64,13 @@ public class BoardGenerator {
         
     }
 
+    // A layout is a configuration of rooms.
+    private static void generateLayout(GameState state) {
+
+    }
+
+    // A room is a square of length ROOM_SIZE.
+    // Multiple rooms are put together in a layout to make a floor
     private static Entity[][] readRoom(String path) throws IOException {
         Entity[][] output = new Entity[ROOM_SIZE][ROOM_SIZE];
 
@@ -61,7 +80,9 @@ public class BoardGenerator {
         for(int lineCount = 0; reader.hasNextLine(); lineCount++) {
             char[] line = reader.nextLine().toCharArray();
             for(int i = 0; i < line.length; i++) {
-                output[lineCount][i] = charToEntity(line[i]);
+                // A difference in i means a horizontal difference in the line
+                // That's why it's output[i][lineCount] instead of output[linCount][i]
+                output[i][lineCount] = charToEntity(line[i]);
             }
         }
  
