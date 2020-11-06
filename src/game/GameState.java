@@ -23,9 +23,12 @@ public class GameState {
         gameBoard = new Entity[boardLength][boardHeight];
 
         player = new Player();
+        BoardGenerator.setPlayer(player);
+
         enemies = new ArrayList<AICreature>();
 
         BoardGenerator.generateTestFloor(this);
+        BoardGenerator.generateFloor(this);
 
     }
 
