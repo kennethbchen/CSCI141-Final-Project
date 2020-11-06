@@ -1,5 +1,7 @@
 package game;
 
+import java.util.Random;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -12,6 +14,8 @@ import entities.*;
 
 public class BoardGenerator {
 
+    // Room Constants
+
     private static final String ROOT_ROOM_PATH = "src/rooms/";
 
     private static final int ROOM_SIZE = 8; // nxn room
@@ -21,6 +25,15 @@ public class BoardGenerator {
     private static final char PLAYER = 'p';
     private static final char SLIME = '1';
     private static final char DOOR = '8';
+
+    // Layout Constants
+
+    private static final int MAX_LAYOUT_SIZE = 6; // Max layout is nxn grid of rooms
+    private static final char START = 's';
+    private static final char FINISH = 'f';
+    private static final char TREASURE = 't';
+    private static final char NORMAL = 'n';
+    private static final char ENEMY = 'e';
     
     private static Player player;
 
@@ -40,7 +53,9 @@ public class BoardGenerator {
     }
 
     public static void generateFloor(GameState state) {
-        
+        char[][] layout = generateLayout(state);
+        state.setBoard(new Entity[layout.length * ROOM_SIZE][layout[0].length * ROOM_SIZE]);
+
         try {
             Entity[][] room = readRoom(ROOT_ROOM_PATH + "testRoom.txt");
             int originX = 0;
@@ -65,8 +80,25 @@ public class BoardGenerator {
     }
 
     // A layout is a configuration of rooms.
-    private static void generateLayout(GameState state) {
+    private static char[][] generateLayout(GameState state) {
+        int maxRooms = 10;
+        int rooms = 0;
+        int keyRooms = 0;
+        int doorRooms = 0;
+        
+        Random rand = new Random();
+        
+        char[][] layout = new char[MAX_LAYOUT_SIZE][MAX_LAYOUT_SIZE];
+        // Select one point from the middle square of the layout to be the start
+        layout[rand.nextInt(MAX_LAYOUT_SIZE - 4) + 2][rand.nextInt(MAX_LAYOUT_SIZE - 4) + 2] = 's';
 
+
+        // The last room to be chosen is the finish
+        return layout;
+    }
+
+    private static int layoutToBoard(int layoutCoordinate) {
+        return ROOM_SIZE * layoutCoordinate;
     }
 
     // A room is a square of length ROOM_SIZE.

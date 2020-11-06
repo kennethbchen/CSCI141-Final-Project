@@ -6,38 +6,38 @@ import entities.*;
 
 public class GameState {
     
-    private int boardLength;
-    private int boardHeight;
-
     // gameBoard[0,0] is world coordinates (0,0)
     private Entity[][] gameBoard;  
-    
+
+    private int floor;
+
     private Player player;
 
     private ArrayList<AICreature> enemies;
     
-    public GameState(int boardLength, int boardHeight) {
-        this.boardLength = boardLength;
-        this.boardHeight = boardHeight;
+    // A new instance of GameState means resetting the game
+    public GameState() {
 
-        gameBoard = new Entity[boardLength][boardHeight];
-
+        floor = 1;
         player = new Player();
         BoardGenerator.setPlayer(player);
 
         enemies = new ArrayList<AICreature>();
 
+
+        // Initialization of the game board is handled by BoardGenerator
         //BoardGenerator.generateTestFloor(this);
         BoardGenerator.generateFloor(this);
 
     }
 
-    public GameState() {
-        this(32,32);
-    }
 
     protected Entity[][] getBoard() {
         return gameBoard;
+    }
+
+    protected void setBoard(Entity[][] board) {
+        gameBoard = board;
     }
 
     protected Player getPlayer() {
@@ -76,8 +76,8 @@ public class GameState {
 
     // 0-Indexed
     public boolean inBoard(int x, int y) {
-        if(x <= boardLength - 1 && x >= 0 && 
-                y <= boardHeight - 1 && y >= 0) {
+        if(x <= gameBoard.length - 1 && x >= 0 && 
+                y <= gameBoard[0].length - 1 && y >= 0) {
             return true;
         } else {
             return false;
