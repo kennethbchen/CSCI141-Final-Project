@@ -51,7 +51,12 @@ public class BoardGenerator {
         char[][] layout = LayoutGenerator.generateLayout();
         
         state.setBoard(new Entity[layout.length * ROOM_SIZE][layout[0].length * ROOM_SIZE]);
-
+        // Fill all spaces with wall entities.
+        for(int column = 0; column < state.getBoard().length; column++) {
+            for(int row = 0; row < state.getBoard().length; row++) {
+                state.getBoard()[column][row] = new Wall();
+            }
+        }
         
         // Read the layout and convert that into rooms in the board
         for(int layoutColumn = 0; layoutColumn < LayoutGenerator.MAX_LAYOUT_SIZE; layoutColumn++) {
