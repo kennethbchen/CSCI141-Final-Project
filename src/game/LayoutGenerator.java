@@ -18,6 +18,7 @@ public class LayoutGenerator {
 
 
     // A layout is a configuration of rooms.
+    // Layout generation concept (implementation by me) from https://github.com/Miziziziz/ThineCometh
     public static char[][] generateLayout() {
         int maxRooms = 10;
         int keyRooms = 0;
@@ -48,6 +49,7 @@ public class LayoutGenerator {
                 // Final room, place the final room
                 layout[point[0]][point[1]] = 'f';
             } else {
+                // Randomly select a room type
                 layout[point[0]][point[1]] = 'n';
             }
             
@@ -100,7 +102,7 @@ public class LayoutGenerator {
         }
     }
 
-    private static boolean inLayout(int x, int y) {
+    public static boolean inLayout(int x, int y) {
         if(x < MAX_LAYOUT_SIZE && x >= 0 &&
             y < MAX_LAYOUT_SIZE && y >= 0 ){
                 return true;

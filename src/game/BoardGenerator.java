@@ -57,11 +57,11 @@ public class BoardGenerator {
         for(int layoutColumn = 0; layoutColumn < LayoutGenerator.MAX_LAYOUT_SIZE; layoutColumn++) {
             for(int layoutRow = 0; layoutRow < LayoutGenerator.MAX_LAYOUT_SIZE; layoutRow++) {
                 if(layout[layoutColumn][layoutRow] == LayoutGenerator.START) {
-                    putRoomInBoard(state, layoutToBoard(layoutColumn), layoutToBoard(layoutRow), "start.txt");
+                    putRoomInBoard(state, layout, layoutColumn, layoutRow, "start.txt");
                 } else if (layout[layoutColumn][layoutRow] == LayoutGenerator.NORMAL) {
-                    putRoomInBoard(state, layoutToBoard(layoutColumn), layoutToBoard(layoutRow), "normal.txt");
+                    putRoomInBoard(state, layout, layoutColumn, layoutRow, "normal.txt");
                 } else if (layout[layoutColumn][layoutRow] == LayoutGenerator.FINISH) {
-                    putRoomInBoard(state, layoutToBoard(layoutColumn), layoutToBoard(layoutRow), "finish.txt");
+                    putRoomInBoard(state, layout, layoutColumn, layoutRow, "finish.txt");
 
                 }
             }
@@ -69,20 +69,51 @@ public class BoardGenerator {
 
     }
 
+    private static String pickRoom(char type) {
+        // Randomly select a room of the given type
+        return "t";
+    }
+
     
 
-    // Loads a room into the board starting at (originX, originY), the top left part of the room
-    private static void putRoomInBoard(GameState state, int originX, int originY, String roomName) {
+    // Loads a room into the board starting at (layoutX, layoutY), the top left part of the room
+    private static void putRoomInBoard(GameState state, char[][] layout, int layoutX, int layoutY, String roomName) {
         try {
             Entity[][] room = readRoom(ROOT_ROOM_PATH + roomName);
+            // Convert layout space to board space
+            int boardX = layoutToBoard(layoutX);
+            int boardY = layoutToBoard(layoutY);
 
-                for(int column = originX; column < originX + ROOM_SIZE; column++) {
-                    for(int row = originY; row < originY + ROOM_SIZE; row++) {
-                        state.getBoard()[column][row] = room[column - originX][row - originY];
+                for(int column = boardX; column < boardX + ROOM_SIZE; column++) {
+                    for(int row = boardY; row < boardY + ROOM_SIZE; row++) {
+                        state.getBoard()[column][row] = room[column - boardX][row - boardY];
                         if(state.getBoard()[column][row] instanceof Player) {
                             state.getPlayer().setPosition(column, row);
                         }
-                        
+                        // Make holes for the sides of rooms that are adjacent to other rooms
+                        // Solution does not work with arbitrary room sizes. Only works when Room size = 8x8
+                        if(LayoutGenerator.inLayout(layoutX - 1, layoutY) && layout[layoutX - 1][layoutY] != LayoutGenerator.NULL_CHAR) {
+                            // Left
+                            state.getBoard()[boardX][boardY + 3] = null;
+                            state.getBoard()[boardX][boardY + 4] = null;
+                        }
+                        if(LayoutGenerator.inLayout(layoutX + 1, layoutY) && layout[layoutX + 1][layoutY] != LayoutGenerator.NULL_CHAR) {
+                            // Right
+                            state.getBoard()[boardX + 7][boardY + 3] = null;
+                            state.getBoard()[boardX + 7][boardY + 4] = null;
+                        }
+                        if(LayoutGenerator.inLayout(layoutX, layoutY - 1) && layout[layoutX][layoutY - 1] != LayoutGenerator.NULL_CHAR) {
+                            // Up
+                            state.getBoard()[boardX + 3][boardY] = null;
+                            state.getBoard()[boardX + 4][boardY] = null;
+                        }
+                        if(LayoutGenerator.inLayout(layoutX, layoutY + 1) && layout[layoutX][layoutY + 1] != LayoutGenerator.NULL_CHAR) {
+                            // Down
+                            state.getBoard()[boardX + 3][boardY + 7] = null;
+                            state.getBoard()[boardX + 4][boardY + 7] = null;
+                        }
+
+                    
                     }
                 }
         } catch (IOException e) {

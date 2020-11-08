@@ -20,11 +20,12 @@ public class GameController extends JPanel {
     private boolean inGame = false;
 
     public GameController() {
-        state = new GameState();
+        
         addKeyListener(new Listener());
     }
 
     public void startGame() {
+        state = new GameState();
         inGame = true;
         repaint();
     }
