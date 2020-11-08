@@ -18,6 +18,11 @@ public class BoardGenerator {
     // Room Constants
 
     private static final String ROOT_ROOM_PATH = "src/rooms/";
+    private static final String START_ROOM_PATH = "start/";
+    private static final String FINISH_ROOM_PATH = "finish/";
+    private static final String TREASURE_ROOM_PATH = "treasure/";
+    private static final String NORMAL_ROOM_PATH = "normal/";
+    private static final String ENEMY_ROOM_PATH = "enemy/";
 
     private static final int ROOM_SIZE = 8; // nxn room
 
@@ -62,11 +67,11 @@ public class BoardGenerator {
         for(int layoutColumn = 0; layoutColumn < LayoutGenerator.MAX_LAYOUT_SIZE; layoutColumn++) {
             for(int layoutRow = 0; layoutRow < LayoutGenerator.MAX_LAYOUT_SIZE; layoutRow++) {
                 if(layout[layoutColumn][layoutRow] == LayoutGenerator.START) {
-                    putRoomInBoard(state, layout, layoutColumn, layoutRow, "start.txt");
+                    putRoomInBoard(state, layout, layoutColumn, layoutRow, pickRoom(LayoutGenerator.START));
                 } else if (layout[layoutColumn][layoutRow] == LayoutGenerator.NORMAL) {
-                    putRoomInBoard(state, layout, layoutColumn, layoutRow, "normal.txt");
+                    putRoomInBoard(state, layout, layoutColumn, layoutRow, pickRoom(LayoutGenerator.NORMAL));
                 } else if (layout[layoutColumn][layoutRow] == LayoutGenerator.FINISH) {
-                    putRoomInBoard(state, layout, layoutColumn, layoutRow, "finish.txt");
+                    putRoomInBoard(state, layout, layoutColumn, layoutRow, pickRoom(LayoutGenerator.FINISH));
 
                 }
             }
@@ -75,16 +80,43 @@ public class BoardGenerator {
     }
 
     private static String pickRoom(char type) {
-        // Randomly select a room of the given type
-        return "t";
+        // Choose which folder to look into based on the type
+        String path = ROOT_ROOM_PATH;
+        switch(type) {
+            case(LayoutGenerator.START):
+            path += START_ROOM_PATH + LayoutGenerator.START;
+            break;
+            case(LayoutGenerator.FINISH):
+            path += FINISH_ROOM_PATH + LayoutGenerator.FINISH;
+            break;
+            case(LayoutGenerator.TREASURE):
+            path += TREASURE_ROOM_PATH + LayoutGenerator.TREASURE;
+            break;
+            default: // If somehow a weird char is inputted
+            case(LayoutGenerator.NORMAL):
+            path += NORMAL_ROOM_PATH + LayoutGenerator.NORMAL;
+            break;
+            case(LayoutGenerator.ENEMY):
+            path += ENEMY_ROOM_PATH + LayoutGenerator.ENEMY;
+            break;
+        }
+
+        // At this point, the path should be "src/rooms/[type]/[type char]"
+        // All files start with the char of its type and a number
+
+        int numFiles = new File(path.substring(0, path.length() - 2)).listFiles().length;
+        Random rand = new Random();
+        path += rand.nextInt(numFiles) + ".txt";
+
+        return path;
     }
 
     
 
     // Loads a room into the board starting at (layoutX, layoutY), the top left part of the room
-    private static void putRoomInBoard(GameState state, char[][] layout, int layoutX, int layoutY, String roomName) {
+    private static void putRoomInBoard(GameState state, char[][] layout, int layoutX, int layoutY, String roomPath) {
         try {
-            Entity[][] room = readRoom(ROOT_ROOM_PATH + roomName);
+            Entity[][] room = readRoom(roomPath);
             // Convert layout space to board space
             int boardX = layoutToBoard(layoutX);
             int boardY = layoutToBoard(layoutY);
@@ -95,6 +127,7 @@ public class BoardGenerator {
                         if(state.getBoard()[column][row] instanceof Player) {
                             state.getPlayer().setPosition(column, row);
                         }
+                        
                         // Make holes for the sides of rooms that are adjacent to other rooms
                         // Solution does not work with arbitrary room sizes. Only works when Room size = 8x8
                         if(LayoutGenerator.inLayout(layoutX - 1, layoutY) && layout[layoutX - 1][layoutY] != LayoutGenerator.NULL_CHAR) {
