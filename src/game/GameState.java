@@ -42,6 +42,10 @@ public class GameState {
         return gameBoard;
     }
 
+    protected int getFloors() {
+        return floor;
+    }
+
     protected void setBoard(Entity[][] board) {
         gameBoard = board;
     }
@@ -116,13 +120,12 @@ public class GameState {
     }
 
     
-
     public void takeTurn() {
         for(int i = 0; i < enemies.size(); i++) {
             // Check if the enemy is dead
             if(enemies.get(i).isDead()) {
                 // It's dead, remove it
-                removeEntity(enemies.get(i).getXPos(), enemies.get(i).getYPos());
+                removeEntity(enemies.get(i));
             } else {
                 // It's alive, let it move
                 enemies.get(i).move(this);

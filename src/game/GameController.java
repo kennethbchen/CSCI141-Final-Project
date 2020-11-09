@@ -8,6 +8,7 @@ import java.awt.geom.*;
 import java.awt.event.KeyListener;
 import java.awt.event.KeyEvent;
 
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 public class GameController extends JPanel {
@@ -19,8 +20,20 @@ public class GameController extends JPanel {
 
     private boolean inGame = false;
 
-    public GameController() {
-        
+    JLabel healthValue;
+    JLabel attackValue;
+    JLabel defenseValue;
+    JLabel keyValue;
+    JLabel floorValue;
+
+    public GameController(JLabel healthValue, JLabel attackValue, JLabel defenseValue,
+        JLabel keyValue, JLabel floorValue) {
+        this.healthValue = healthValue;
+        this.attackValue = attackValue;
+        this.defenseValue = defenseValue;
+        this.keyValue = keyValue;
+        this.floorValue = floorValue;
+
         addKeyListener(new Listener());
     }
 
@@ -125,10 +138,20 @@ public class GameController extends JPanel {
             }
         }
 
+        // Update the UI with new player stats
+        updateInterface();
     }
 
     private void renderHealth(Creature creature) {
 
+    }
+
+    private void updateInterface() {
+        healthValue.setText(state.getPlayer().getHealth() + "/" + state.getPlayer().getMaxHealth());
+        attackValue.setText(String.valueOf(state.getPlayer().getAttack()));
+        defenseValue.setText(String.valueOf(state.getPlayer().getDefense()));
+        keyValue.setText(String.valueOf(state.getPlayer().getKeys()));
+        floorValue.setText(String.valueOf(state.getFloors()));
     }
 
     private class Listener implements KeyListener {
