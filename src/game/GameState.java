@@ -31,6 +31,12 @@ public class GameState {
 
     }
 
+    public void newFloor() {
+        floor++;
+        enemies = new ArrayList<AICreature>();
+        BoardGenerator.generateFloor(this);
+    }
+
 
     protected Entity[][] getBoard() {
         return gameBoard;

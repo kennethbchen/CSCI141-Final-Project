@@ -5,6 +5,7 @@ import javax.imageio.ImageIO;
 
 
 import game.GameState;
+import entities.Interactable;
 
 public class Player extends Creature {
 
@@ -34,7 +35,7 @@ public class Player extends Creature {
 
     public void move(GameState state, Direction direction) {
         // This may cause problems if both dx and dy are both 0 somehow. 
-        // If the player starts atticking themselves, this is why
+        // If the player starts attacking themselves, this is why
         int dx = 0;
         int dy = 0; 
         
@@ -61,7 +62,12 @@ public class Player extends Creature {
             } else if (state.getAtPos(getXPos() + dx, getYPos() + dy) instanceof Creature) {
                 Creature target = (Creature) state.getAtPos(getXPos() + dx, getYPos() + dy);
                 target.takeDamage(getAttack());
-            } // Other checks for moving into objects like keys go here
+            } else if (state.getAtPos(getXPos() + dx, getYPos() + dy) instanceof Interactable) {
+                // Checks for things like keys, doors, stairs, and items
+                Interactable thing = (Interactable) state.getAtPos(getXPos() + dx, getYPos() + dy);
+                thing.interact(this);
+            }
+                
         }
     
     }

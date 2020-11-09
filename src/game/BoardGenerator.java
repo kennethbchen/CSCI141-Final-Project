@@ -29,6 +29,7 @@ public class BoardGenerator {
     private static final char EMPTY = '.';
     private static final char WALL = '+';
     private static final char PLAYER = 'p';
+    private static final char STAIRS = 's';
     private static final char SLIME = '1';
     private static final char DOOR = '8';
 
@@ -126,6 +127,9 @@ public class BoardGenerator {
                         state.getBoard()[column][row] = room[column - boardX][row - boardY];
                         if(state.getBoard()[column][row] instanceof Player) {
                             state.getPlayer().setPosition(column, row);
+                        } else if (state.getBoard()[column][row] instanceof Stairs) {
+                            Stairs s = (Stairs) state.getBoard()[column][row];
+                            s.setState(state);
                         }
                         
                         // Make holes for the sides of rooms that are adjacent to other rooms
@@ -195,6 +199,8 @@ public class BoardGenerator {
                 return new Wall();
             case PLAYER:
                 return player;
+            case STAIRS:
+                return new Stairs();
             case SLIME:
                 return new Slime();
             default:
