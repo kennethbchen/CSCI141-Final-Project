@@ -4,10 +4,15 @@ import java.io.File;
 
 import javax.imageio.ImageIO;
 
+import game.GameState;
+
 public class Sword extends Entity implements Interactable {
 
-    
+    GameState state;
 
+    public Sword(GameState state) {
+        this.state = state;
+    }
     @Override
     public void loadSprite() {
         try {
@@ -21,6 +26,7 @@ public class Sword extends Entity implements Interactable {
     @Override
     public void interact(Player player) {
         player.setAttack(player.getAttack() + 1);
+        state.removeEntity(this);
 
     }
     

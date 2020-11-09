@@ -51,7 +51,7 @@ public class BoardGenerator {
         state.addEntity(new Wall(), 3, 2);
         state.addEntity(new Slime(), 3, 3);
         state.addEntity(new Slime(), 4, 3);
-        state.addEntity(new Sword(), 5, 3);
+        state.addEntity(new Sword(state), 5, 3);
         
     }
 
@@ -121,45 +121,71 @@ public class BoardGenerator {
     // Loads a room into the board starting at (layoutX, layoutY), the top left part of the room
     private static void putRoomInBoard(GameState state, char[][] layout, int layoutX, int layoutY, String roomPath) {
         try {
-            Entity[][] room = readRoom(roomPath);
+
+            File roomFile = new File(roomPath);
+            Scanner reader = new Scanner(new FileReader(roomFile));
+
             // Convert layout space to board space
             int boardX = layoutToBoard(layoutX);
             int boardY = layoutToBoard(layoutY);
-            
-                for(int column = boardX; column < boardX + ROOM_SIZE; column++) {
-                    for(int row = boardY; row < boardY + ROOM_SIZE; row++) {
-                        state.addEntity(room[column - boardX][row - boardY], column, row);
 
-                        if (state.getBoard()[column][row] instanceof Stairs) {
-                            Stairs s = (Stairs) state.getBoard()[column][row];
-                            s.setState(state);
+                // Loop through rows first because scanner reads rows first
+                for(int row = boardY; row < boardY + ROOM_SIZE; row++) {
+                        char[] line = reader.nextLine().toCharArray();
+                    for(int column = boardX; column < boardX + ROOM_SIZE; column++) {
+                        Entity e = null;
+                        // Figure out which entity to put in this space, or leave null
+                        switch(line[column - boardX]) {
+
+                            case WALL:
+                                e = new Wall();
+                                break;
+                            case PLAYER:
+                                e = player;
+                                break;
+                            case STAIRS:
+                                e = new Stairs(state);
+                                break;
+                            case SWORD:
+                                e = new Sword(state);
+                                break;
+                            case SLIME:
+                                e = new Slime();           
+                                break;
+                            default:
+                                System.out.println("Invalid room element " + line[column - boardX] + " returning null");
+                            case EMPTY:
+                                break;
                         }
+                        state.addEntity(e, column, row);
 
                     }
                 }
 
-                // Make holes for the sides of rooms that are adjacent to other rooms
-                // Solution does not work with arbitrary room sizes. Only works when Room size = 8x8
-                if(LayoutGenerator.inLayout(layoutX - 1, layoutY) && layout[layoutX - 1][layoutY] != LayoutGenerator.NULL_CHAR) {
-                    // Left
-                    state.getBoard()[boardX][boardY + 3] = null;
-                    state.getBoard()[boardX][boardY + 4] = null;
-                }
-                if(LayoutGenerator.inLayout(layoutX + 1, layoutY) && layout[layoutX + 1][layoutY] != LayoutGenerator.NULL_CHAR) {
-                    // Right
-                    state.getBoard()[boardX + 7][boardY + 3] = null;
-                    state.getBoard()[boardX + 7][boardY + 4] = null;
-                }
-                if(LayoutGenerator.inLayout(layoutX, layoutY - 1) && layout[layoutX][layoutY - 1] != LayoutGenerator.NULL_CHAR) {
-                    // Up
-                    state.getBoard()[boardX + 3][boardY] = null;
-                    state.getBoard()[boardX + 4][boardY] = null;
-                }
-                if(LayoutGenerator.inLayout(layoutX, layoutY + 1) && layout[layoutX][layoutY + 1] != LayoutGenerator.NULL_CHAR) {
-                    // Down
-                    state.getBoard()[boardX + 3][boardY + 7] = null;
-                    state.getBoard()[boardX + 4][boardY + 7] = null;
-                }
+            // Make holes for the sides of rooms that are adjacent to other rooms
+            // Solution does not work with arbitrary room sizes. Only works when Room size = 8x8
+            if(LayoutGenerator.inLayout(layoutX - 1, layoutY) && layout[layoutX - 1][layoutY] != LayoutGenerator.NULL_CHAR) {
+                // Left
+                state.getBoard()[boardX][boardY + 3] = null;
+                state.getBoard()[boardX][boardY + 4] = null;
+            }
+            if(LayoutGenerator.inLayout(layoutX + 1, layoutY) && layout[layoutX + 1][layoutY] != LayoutGenerator.NULL_CHAR) {
+                // Right
+                state.getBoard()[boardX + 7][boardY + 3] = null;
+                state.getBoard()[boardX + 7][boardY + 4] = null;
+            }
+            if(LayoutGenerator.inLayout(layoutX, layoutY - 1) && layout[layoutX][layoutY - 1] != LayoutGenerator.NULL_CHAR) {
+                // Up
+                state.getBoard()[boardX + 3][boardY] = null;
+                state.getBoard()[boardX + 4][boardY] = null;
+            }
+            if(LayoutGenerator.inLayout(layoutX, layoutY + 1) && layout[layoutX][layoutY + 1] != LayoutGenerator.NULL_CHAR) {
+                // Down
+                state.getBoard()[boardX + 3][boardY + 7] = null;
+                state.getBoard()[boardX + 4][boardY + 7] = null;
+            }
+
+            reader.close();
         } catch (IOException e) {
             System.out.println("Error occured while generating floor");
             System.out.println(e);
@@ -171,48 +197,7 @@ public class BoardGenerator {
         return ROOM_SIZE * layoutCoordinate;
     }
 
-    // A room is a square of length ROOM_SIZE.
-    // Multiple rooms are put together in a layout to make a floor
-    private static Entity[][] readRoom(String path) throws IOException {
-        Entity[][] output = new Entity[ROOM_SIZE][ROOM_SIZE];
 
-        File room = new File(path);
-        Scanner reader = new Scanner(new FileReader(room));;
-
-        for(int lineCount = 0; reader.hasNextLine(); lineCount++) {
-            char[] line = reader.nextLine().toCharArray();
-            for(int i = 0; i < line.length; i++) {
-                // A difference in i means a horizontal difference in the line
-                // That's why it's output[i][lineCount] instead of output[linCount][i]
-                output[i][lineCount] = charToEntity(line[i]);
-            }
-        }
- 
-        reader.close();
-
-        return output;
-    }
-
-    private static Entity charToEntity(char c) {
-        switch(c) {
-            case EMPTY:
-                return null;
-            case WALL:
-                return new Wall();
-            case PLAYER:
-                return player;
-            case STAIRS:
-                return new Stairs();
-            case SWORD:
-                return new Sword();
-            case SLIME:
-                return new Slime();
-            default:
-                System.out.println("Invalid room element " + c + " returning null");
-                return null;
-        }
-
-    }
 
 
 }

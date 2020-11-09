@@ -9,10 +9,10 @@ public class Stairs extends Entity implements Interactable{
 
     private GameState state;
     
-    public void setState(GameState state) {
+    public Stairs(GameState state) {
         this.state = state;
     }
-    
+
     @Override
     public void loadSprite() {
         try {
