@@ -30,6 +30,8 @@ public class BoardGenerator {
     private static final char WALL = '+';
     private static final char PLAYER = 'p';
     private static final char STAIRS = 's';
+    private static final char SWORD = 'a';
+    private static final char SHIELD = 'd';
     private static final char SLIME = '1';
     private static final char DOOR = '8';
 
@@ -48,6 +50,8 @@ public class BoardGenerator {
         state.addEntity(new Wall(), 2, 2);
         state.addEntity(new Wall(), 3, 2);
         state.addEntity(new Slime(), 3, 3);
+        state.addEntity(new Slime(), 4, 3);
+        state.addEntity(new Sword(), 5, 3);
         
     }
 
@@ -121,42 +125,40 @@ public class BoardGenerator {
             // Convert layout space to board space
             int boardX = layoutToBoard(layoutX);
             int boardY = layoutToBoard(layoutY);
-
+            
                 for(int column = boardX; column < boardX + ROOM_SIZE; column++) {
                     for(int row = boardY; row < boardY + ROOM_SIZE; row++) {
-                        state.getBoard()[column][row] = room[column - boardX][row - boardY];
-                        if(state.getBoard()[column][row] instanceof Player) {
-                            state.getPlayer().setPosition(column, row);
-                        } else if (state.getBoard()[column][row] instanceof Stairs) {
+                        state.addEntity(room[column - boardX][row - boardY], column, row);
+
+                        if (state.getBoard()[column][row] instanceof Stairs) {
                             Stairs s = (Stairs) state.getBoard()[column][row];
                             s.setState(state);
                         }
-                        
-                        // Make holes for the sides of rooms that are adjacent to other rooms
-                        // Solution does not work with arbitrary room sizes. Only works when Room size = 8x8
-                        if(LayoutGenerator.inLayout(layoutX - 1, layoutY) && layout[layoutX - 1][layoutY] != LayoutGenerator.NULL_CHAR) {
-                            // Left
-                            state.getBoard()[boardX][boardY + 3] = null;
-                            state.getBoard()[boardX][boardY + 4] = null;
-                        }
-                        if(LayoutGenerator.inLayout(layoutX + 1, layoutY) && layout[layoutX + 1][layoutY] != LayoutGenerator.NULL_CHAR) {
-                            // Right
-                            state.getBoard()[boardX + 7][boardY + 3] = null;
-                            state.getBoard()[boardX + 7][boardY + 4] = null;
-                        }
-                        if(LayoutGenerator.inLayout(layoutX, layoutY - 1) && layout[layoutX][layoutY - 1] != LayoutGenerator.NULL_CHAR) {
-                            // Up
-                            state.getBoard()[boardX + 3][boardY] = null;
-                            state.getBoard()[boardX + 4][boardY] = null;
-                        }
-                        if(LayoutGenerator.inLayout(layoutX, layoutY + 1) && layout[layoutX][layoutY + 1] != LayoutGenerator.NULL_CHAR) {
-                            // Down
-                            state.getBoard()[boardX + 3][boardY + 7] = null;
-                            state.getBoard()[boardX + 4][boardY + 7] = null;
-                        }
 
-                    
                     }
+                }
+
+                // Make holes for the sides of rooms that are adjacent to other rooms
+                // Solution does not work with arbitrary room sizes. Only works when Room size = 8x8
+                if(LayoutGenerator.inLayout(layoutX - 1, layoutY) && layout[layoutX - 1][layoutY] != LayoutGenerator.NULL_CHAR) {
+                    // Left
+                    state.getBoard()[boardX][boardY + 3] = null;
+                    state.getBoard()[boardX][boardY + 4] = null;
+                }
+                if(LayoutGenerator.inLayout(layoutX + 1, layoutY) && layout[layoutX + 1][layoutY] != LayoutGenerator.NULL_CHAR) {
+                    // Right
+                    state.getBoard()[boardX + 7][boardY + 3] = null;
+                    state.getBoard()[boardX + 7][boardY + 4] = null;
+                }
+                if(LayoutGenerator.inLayout(layoutX, layoutY - 1) && layout[layoutX][layoutY - 1] != LayoutGenerator.NULL_CHAR) {
+                    // Up
+                    state.getBoard()[boardX + 3][boardY] = null;
+                    state.getBoard()[boardX + 4][boardY] = null;
+                }
+                if(LayoutGenerator.inLayout(layoutX, layoutY + 1) && layout[layoutX][layoutY + 1] != LayoutGenerator.NULL_CHAR) {
+                    // Down
+                    state.getBoard()[boardX + 3][boardY + 7] = null;
+                    state.getBoard()[boardX + 4][boardY + 7] = null;
                 }
         } catch (IOException e) {
             System.out.println("Error occured while generating floor");
@@ -201,6 +203,8 @@ public class BoardGenerator {
                 return player;
             case STAIRS:
                 return new Stairs();
+            case SWORD:
+                return new Sword();
             case SLIME:
                 return new Slime();
             default:

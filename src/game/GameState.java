@@ -51,13 +51,15 @@ public class GameState {
     }
 
     protected void addEntity(Entity entity, int x, int y) {
-        if(isEmptySpace(x, y)) {
+        if(inBoard(x, y) && entity != null) {
             entity.setPosition(x, y);
             gameBoard[x][y] = entity;
 
             if(entity instanceof AICreature) {
                 enemies.add((AICreature) entity);
             }
+        } else if (entity == null) {
+            gameBoard[x][y] = null;
         }
         
     }
@@ -71,6 +73,10 @@ public class GameState {
         }
         // Remove it from the board
         gameBoard[x][y] = null;
+    }
+
+    public void removeEntity(Entity e) {
+        removeEntity(e.getXPos(), e.getYPos());
     }
 
     // It is assumed that the entity has updated their internal position 
