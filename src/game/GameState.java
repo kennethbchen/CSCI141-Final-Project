@@ -26,8 +26,7 @@ public class GameState {
 
 
         // Initialization of the game board is handled by BoardGenerator
-        //BoardGenerator.generateTestFloor(this);
-        BoardGenerator.generateFloor(this);
+        BoardGenerator.generateTestFloor(this);
 
     }
 

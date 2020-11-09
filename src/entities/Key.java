@@ -1,21 +1,22 @@
 package entities;
 
-import java.io.File;
+import java.io.*;
 import javax.imageio.ImageIO;
 
 import game.GameState;
 
-public class Sword extends Entity implements Interactable {
+public class Key extends Entity implements Interactable {
 
-    GameState state;
-
-    public Sword(GameState state) {
+    private GameState state;
+    
+    public Key(GameState state) {
         this.state = state;
     }
+    
     @Override
     public void loadSprite() {
         try {
-            sprite = ImageIO.read(new File("src/res/sword.png"));
+            sprite = ImageIO.read(new File("src/res/key.png"));
             } catch (Exception e) {
                 System.out.println(e);
             }
@@ -24,9 +25,8 @@ public class Sword extends Entity implements Interactable {
 
     @Override
     public void interact(Player player) {
-        player.setAttack(player.getAttack() + 1);
+        player.addKey();
         state.removeEntity(this);
 
     }
-    
 }

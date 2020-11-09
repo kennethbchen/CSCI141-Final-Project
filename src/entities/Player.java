@@ -76,7 +76,7 @@ public class Player extends Creature {
     public void loadSprite() {
         
         try {
-        sprite = ImageIO.read(new File("src/res/Player.png"));;
+        sprite = ImageIO.read(new File("src/res/player.png"));;
         } catch (Exception e) {
             System.out.println(e);
         }

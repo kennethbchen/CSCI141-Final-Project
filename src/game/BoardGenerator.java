@@ -46,12 +46,20 @@ public class BoardGenerator {
     public static void generateTestFloor(GameState state) {
         state.setBoard(new Entity[8][8]);
         state.addEntity(state.getPlayer(), 1, 1);
-        state.addEntity(new Wall(), 1, 5);
+        state.getPlayer().takeDamage(5);
+        
         state.addEntity(new Wall(), 2, 2);
         state.addEntity(new Wall(), 3, 2);
+
         state.addEntity(new Slime(), 3, 3);
         state.addEntity(new Slime(), 4, 3);
-        state.addEntity(new Sword(state), 5, 3);
+        
+        state.addEntity(new Key(state), 4, 4);
+        state.addEntity(new Door(state), 5, 4);
+
+        state.addEntity(new Potion(state), 2, 6);
+        state.addEntity(new Sword(state), 4, 6);
+        state.addEntity(new Shield(state), 5, 6);
         
     }
 
@@ -149,6 +157,8 @@ public class BoardGenerator {
                             case SWORD:
                                 e = new Sword(state);
                                 break;
+                            case SHIELD:
+                                e = new Shield(state);
                             case SLIME:
                                 e = new Slime();           
                                 break;
