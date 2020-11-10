@@ -81,10 +81,14 @@ public class BoardGenerator {
             for(int layoutRow = 0; layoutRow < LayoutGenerator.MAX_LAYOUT_SIZE; layoutRow++) {
                 if(layout[layoutColumn][layoutRow] == LayoutGenerator.START) {
                     putRoomInBoard(state, layout, layoutColumn, layoutRow, pickRoom(LayoutGenerator.START));
-                } else if (layout[layoutColumn][layoutRow] == LayoutGenerator.NORMAL) {
-                    putRoomInBoard(state, layout, layoutColumn, layoutRow, pickRoom(LayoutGenerator.NORMAL));
                 } else if (layout[layoutColumn][layoutRow] == LayoutGenerator.FINISH) {
                     putRoomInBoard(state, layout, layoutColumn, layoutRow, pickRoom(LayoutGenerator.FINISH));
+                } else if (layout[layoutColumn][layoutRow] == LayoutGenerator.NORMAL) {
+                    putRoomInBoard(state, layout, layoutColumn, layoutRow, pickRoom(LayoutGenerator.NORMAL));
+                } else if (layout[layoutColumn][layoutRow] == LayoutGenerator.TREASURE) {
+                    putRoomInBoard(state, layout, layoutColumn, layoutRow, pickRoom(LayoutGenerator.TREASURE));
+                } else if (layout[layoutColumn][layoutRow] == LayoutGenerator.ENEMY) {
+                    putRoomInBoard(state, layout, layoutColumn, layoutRow, pickRoom(LayoutGenerator.ENEMY));
 
                 }
             }
@@ -159,6 +163,7 @@ public class BoardGenerator {
                                 break;
                             case SHIELD:
                                 e = new Shield(state);
+                                break;
                             case SLIME:
                                 e = new Slime();           
                                 break;

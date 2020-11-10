@@ -9,6 +9,19 @@ public class LayoutGenerator {
     // Layout Constants
 
     public static final int MAX_LAYOUT_SIZE = 6; // Max layout is nxn grid of rooms
+    
+    private static final int MIN_ROOMS = 8;
+    private static final int MIN_TREASURE_ROOMS = 2;
+    private static final int MIN_NORMAL_ROOMS = 2;
+    private static final int MIN_ENEMY_ROOMS = 2;
+
+    // All three have to add to 1
+    private static final double TREASURE_ROOM_CHANCE = .10;
+    private static final double ENEMY_ROOM_CHANCE = .50;
+    // Normal room is just not the other rooms
+    
+
+    
     public static final char NULL_CHAR = '\u0000';
     public static final char START = 's';
     public static final char FINISH = 'f';
@@ -25,7 +38,7 @@ public class LayoutGenerator {
         int doorRooms = 0;
         
         Random rand = new Random();
-        
+
         char[][] layout = new char[MAX_LAYOUT_SIZE][MAX_LAYOUT_SIZE];
         
 
@@ -49,8 +62,20 @@ public class LayoutGenerator {
                 // Final room, place the final room
                 layout[point[0]][point[1]] = 'f';
             } else {
-                // Randomly select a room type
-                layout[point[0]][point[1]] = 'n';
+                // Choose what room type to make the spot.
+                // Currently does not take into account maximum room type numbers
+                double randomNumber = rand.nextDouble(); // (0,1]
+
+                if(randomNumber < TREASURE_ROOM_CHANCE) { // (0, .25]
+                    layout[point[0]][point[1]] = TREASURE;
+                } else if ( randomNumber > TREASURE_ROOM_CHANCE &&
+                        randomNumber < TREASURE_ROOM_CHANCE + ENEMY_ROOM_CHANCE) { // (.25, .75]
+                    layout[point[0]][point[1]] = ENEMY;
+                } else { // (.25, 1)
+                    layout[point[0]][point[1]] = NORMAL;
+                }
+
+                
             }
             
             addAdjacentRooms(layout, possibleSpaces, point[0], point[1]); 
@@ -69,6 +94,7 @@ public class LayoutGenerator {
             }
             System.out.println();
         }
+        System.out.println("--------");
 
         // The last room to be chosen is the finish
         return layout;
