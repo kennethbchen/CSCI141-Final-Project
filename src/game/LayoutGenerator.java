@@ -17,7 +17,8 @@ public class LayoutGenerator {
 
     // All three have to add to 1
     private static final double TREASURE_ROOM_CHANCE = .10;
-    private static final double ENEMY_ROOM_CHANCE = .50;
+    private static final double ENEMY_ROOM_CHANCE = .40;
+    private static final double DOOR_ROOM_CHANCE = .20;
     // Normal room is just not the other rooms
     
 
@@ -28,6 +29,8 @@ public class LayoutGenerator {
     public static final char TREASURE = 't';
     public static final char NORMAL = 'n';
     public static final char ENEMY = 'e';
+    public static final char DOOR = 'd';
+    public static final char KEY = 'k';
 
 
     // A layout is a configuration of rooms.
@@ -64,13 +67,27 @@ public class LayoutGenerator {
             } else {
                 // Choose what room type to make the spot.
                 // Currently does not take into account maximum room type numbers
+
+                if(doorRooms > keyRooms) {
+                    // More Door rooms than key rooms, make the next room a key room
+                    layout[point[0]][point[1]] = KEY;
+                    keyRooms++;
+                    continue;
+                }
+                
+
+
                 double randomNumber = rand.nextDouble(); // (0,1]
 
-                if(randomNumber < TREASURE_ROOM_CHANCE) { // (0, .25]
+                if(randomNumber < TREASURE_ROOM_CHANCE) { // (0, .10]
                     layout[point[0]][point[1]] = TREASURE;
                 } else if ( randomNumber > TREASURE_ROOM_CHANCE &&
-                        randomNumber < TREASURE_ROOM_CHANCE + ENEMY_ROOM_CHANCE) { // (.25, .75]
+                        randomNumber <= TREASURE_ROOM_CHANCE + ENEMY_ROOM_CHANCE) { // (.10, .5]
                     layout[point[0]][point[1]] = ENEMY;
+                } else if ( roomsPlaced < 8 && randomNumber > TREASURE_ROOM_CHANCE + ENEMY_ROOM_CHANCE &&
+                    randomNumber <= TREASURE_ROOM_CHANCE + ENEMY_ROOM_CHANCE + DOOR_ROOM_CHANCE) { // (.5, .70]
+                    layout[point[0]][point[1]] = DOOR;
+                    doorRooms++;
                 } else { // (.25, 1)
                     layout[point[0]][point[1]] = NORMAL;
                 }

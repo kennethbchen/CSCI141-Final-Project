@@ -23,6 +23,9 @@ public class BoardGenerator {
     private static final String TREASURE_ROOM_PATH = "treasure/";
     private static final String NORMAL_ROOM_PATH = "normal/";
     private static final String ENEMY_ROOM_PATH = "enemy/";
+    private static final String DOOR_ROOM_PATH = "door/";
+    private static final String KEY_ROOM_PATH = "key/";
+
 
     private static final int ROOM_SIZE = 8; // nxn room
 
@@ -33,7 +36,8 @@ public class BoardGenerator {
     private static final char SWORD = 'a';
     private static final char SHIELD = 'd';
     private static final char SLIME = '1';
-    private static final char DOOR = '8';
+    private static final char DOOR = '=';
+    private static final char KEY = '^';
 
     
     private static Player player;
@@ -89,6 +93,10 @@ public class BoardGenerator {
                     putRoomInBoard(state, layout, layoutColumn, layoutRow, pickRoom(LayoutGenerator.TREASURE));
                 } else if (layout[layoutColumn][layoutRow] == LayoutGenerator.ENEMY) {
                     putRoomInBoard(state, layout, layoutColumn, layoutRow, pickRoom(LayoutGenerator.ENEMY));
+                } else if (layout[layoutColumn][layoutRow] == LayoutGenerator.DOOR) {
+                    putRoomInBoard(state, layout, layoutColumn, layoutRow, pickRoom(LayoutGenerator.DOOR));
+                } else if (layout[layoutColumn][layoutRow] == LayoutGenerator.KEY) {
+                    putRoomInBoard(state, layout, layoutColumn, layoutRow, pickRoom(LayoutGenerator.KEY));
 
                 }
             }
@@ -116,6 +124,13 @@ public class BoardGenerator {
             case(LayoutGenerator.ENEMY):
             path += ENEMY_ROOM_PATH + LayoutGenerator.ENEMY;
             break;
+            case(LayoutGenerator.DOOR):
+            path += DOOR_ROOM_PATH + LayoutGenerator.DOOR;
+            break;
+            case(LayoutGenerator.KEY):
+            path += KEY_ROOM_PATH + LayoutGenerator.KEY;
+            break;
+
         }
 
         // At this point, the path should be "src/rooms/[type]/[type char]"
@@ -166,6 +181,12 @@ public class BoardGenerator {
                                 break;
                             case SLIME:
                                 e = new Slime();           
+                                break;
+                            case DOOR:
+                                e = new Door(state);
+                                break;
+                            case KEY:
+                                e = new Key(state);
                                 break;
                             default:
                                 System.out.println("Invalid room element " + line[column - boardX] + " returning null");
