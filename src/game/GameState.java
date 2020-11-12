@@ -26,7 +26,7 @@ public class GameState {
 
 
         // Initialization of the game board is handled by BoardGenerator
-        BoardGenerator.generateFloor(this);
+        BoardGenerator.generateTestFloor(this);
 
     }
 
@@ -47,10 +47,6 @@ public class GameState {
 
     protected void setBoard(Entity[][] board) {
         gameBoard = board;
-    }
-
-    protected Player getPlayer() {
-        return player;
     }
 
     protected void addEntity(Entity entity, int x, int y) {
@@ -87,6 +83,10 @@ public class GameState {
     protected void updateEntityPosition(Entity entity, int prevX, int prevY) {
         gameBoard[prevX][prevY] = null;
         gameBoard[entity.getXPos()][entity.getYPos()] = entity;
+    }
+
+    public Player getPlayer() {
+        return player;
     }
 
     // 0-Indexed

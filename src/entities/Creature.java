@@ -9,6 +9,9 @@ public abstract class Creature extends Entity {
     private int attack;
     private int defense;
 
+    public Creature(){
+        super();
+    }
     public int getHealth() {
         return health;
     }

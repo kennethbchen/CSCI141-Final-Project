@@ -55,8 +55,7 @@ public class BoardGenerator {
         state.addEntity(new Wall(), 2, 2);
         state.addEntity(new Wall(), 3, 2);
 
-        state.addEntity(new Slime(), 3, 3);
-        state.addEntity(new Slime(), 4, 3);
+        state.addEntity(new Slime(state), 3, 3);
         
         state.addEntity(new Key(state), 4, 4);
         state.addEntity(new Door(state), 5, 4);
@@ -180,7 +179,7 @@ public class BoardGenerator {
                                 e = new Shield(state);
                                 break;
                             case SLIME:
-                                e = new Slime();           
+                                e = new Slime(state);           
                                 break;
                             case DOOR:
                                 e = new Door(state);

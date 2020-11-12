@@ -61,6 +61,7 @@ public class LayoutGenerator {
         for(int roomsPlaced = 1; roomsPlaced <= maxRooms; roomsPlaced++) {
             int randIndex = rand.nextInt(possibleSpaces.size()); // (0, size]
             int[] point = possibleSpaces.remove(randIndex);
+            
             if(roomsPlaced >= maxRooms) {
                 // Final room, place the final room
                 layout[point[0]][point[1]] = 'f';

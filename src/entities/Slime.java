@@ -7,16 +7,12 @@ import javax.imageio.ImageIO;
 
 public class Slime extends AICreature {
 
-    public Slime() {
+    public Slime(GameState state) {
+        super(state);
         setMaxHealth(4);
         heal(4);
         setAttack(1);
         setDefense(0);
-    }
-    @Override
-    public void move(GameState state) {
-        // TODO Add AI
-
     }
 
 
