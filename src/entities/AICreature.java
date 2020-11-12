@@ -13,24 +13,22 @@ public abstract class AICreature extends Creature {
 
     GameState state;
 
-    boolean seesPlayer;
-
     public AICreature(GameState state) {
         super();
-        lastPlayerPos = new int[2];
 
         this.state = state;
     }
-
-    
-    
 
     public void move(GameState state) {
         //LineDrawing.drawLine(getXPos(), getYPos(), state.getPlayer().getXPos(), state.getPlayer().getYPos(), this);
         if(hasLineOfSight()) {
             System.out.println("has line of sight");
-        } else {
-            System.out.println("blocked");
+            // Update the last known player position
+            lastPlayerPos = new int[] {state.getPlayer().getXPos(), state.getPlayer().getYPos()};
+        }
+
+        if(lastPlayerPos != null) {
+            // Some pathfinding algorithm goes here
         }
         
     
@@ -45,6 +43,8 @@ public abstract class AICreature extends Creature {
         int y1 = state.getPlayer().getYPos();
 
         boolean steep = Math.abs(y1 - y0) > Math.abs(x1 - x0);
+        boolean swapped = false;
+
         if(steep) {
             // If it is steep, then swap x and y values
             int temp = x0;
@@ -59,7 +59,6 @@ public abstract class AICreature extends Creature {
         // (i.e the initial point is to the right of the destination point)
         // Swap the initial and destination points
         // This makes x0 always less than x1 and dx always negative
-        boolean swapped = false;
         if(x0 > x1) {
             swapped = true;
             int temp = x0;

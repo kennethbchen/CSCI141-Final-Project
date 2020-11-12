@@ -59,7 +59,7 @@ public class GameController extends JPanel {
     }
 
     private void drawTitle(Graphics g) {
-        // Boilerplate
+        // General Graphics2D Boilerplate from http://zetcode.com/javagames/basics/
         Graphics2D graphics = (Graphics2D) g;
         RenderingHints rh = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         rh.put(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
@@ -73,7 +73,7 @@ public class GameController extends JPanel {
     }
 
     private void drawGame(Graphics g) {
-        // Boilerplate
+        // General Graphics2D Boilerplate from http://zetcode.com/javagames/basics/
         Graphics2D graphics = (Graphics2D) g;
         RenderingHints rh = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         rh.put(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);

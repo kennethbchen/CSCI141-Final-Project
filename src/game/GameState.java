@@ -127,7 +127,10 @@ public class GameState {
                 removeEntity(enemies.get(i));
             } else {
                 // It's alive, let it move
+                int prevX = enemies.get(i).getXPos();
+                int prevY = enemies.get(i).getYPos();
                 enemies.get(i).move(this);
+                updateEntityPosition(enemies.get(i), prevX, prevY);
             }
             
         }
