@@ -13,6 +13,7 @@ public class GameState {
 
     private Player player;
 
+
     private ArrayList<AICreature> enemies;
     
     // A new instance of GameState means resetting the game
@@ -24,9 +25,8 @@ public class GameState {
 
         enemies = new ArrayList<AICreature>();
 
-
         // Initialization of the game board is handled by BoardGenerator
-        BoardGenerator.generateTestFloor(this);
+        BoardGenerator.generateFloor(this);
 
     }
 

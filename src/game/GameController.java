@@ -19,6 +19,7 @@ public class GameController extends JPanel {
     GameState state;
 
     private boolean inGame = false;
+    private boolean playerLost = false;
 
     JLabel healthValue;
     JLabel attackValue;
@@ -40,6 +41,7 @@ public class GameController extends JPanel {
     public void startGame() {
         state = new GameState();
         inGame = true;
+        playerLost = false;
         repaint();
     }
 
@@ -56,6 +58,10 @@ public class GameController extends JPanel {
             drawTitle(g);
         }
 
+    }
+
+    public void loseGame() {
+        playerLost = true;
     }
 
     private void drawTitle(Graphics g) {

@@ -34,8 +34,6 @@ public class Player extends Creature {
     }
 
     public void move(GameState state, Direction direction) {
-        // This may cause problems if both dx and dy are both 0 somehow. 
-        // If the player starts attacking themselves, this is why
         int dx = 0;
         int dy = 0; 
         
@@ -59,7 +57,8 @@ public class Player extends Creature {
                 // If there's empty space where the player wants to move, move there
                 setXPos(getXPos() + dx);
                 setYPos(getYPos() + dy);
-            } else if (state.getAtPos(getXPos() + dx, getYPos() + dy) instanceof Creature) {
+            } else if (state.getAtPos(getXPos() + dx, getYPos() + dy) instanceof Creature &&
+                            !(state.getAtPos(getXPos() + dx, getYPos() + dy) instanceof Player)) {
                 Creature target = (Creature) state.getAtPos(getXPos() + dx, getYPos() + dy);
                 target.takeDamage(getAttack());
             } else if (state.getAtPos(getXPos() + dx, getYPos() + dy) instanceof Interactable) {

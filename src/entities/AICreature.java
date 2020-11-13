@@ -1,40 +1,95 @@
 package entities;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Queue;
 
 import game.GameState;
 
 public abstract class AICreature extends Creature {
     
-    // int[] are [x,y] points
     
-    int[] lastPlayerPos;
+    private final int sightRange = 7;
 
     GameState state;
 
+    // int[] is [x,y] points
+    ArrayDeque<int[]> moveQueue;
+    int[] lastPlayerPosition;
+
     public AICreature(GameState state) {
         super();
-
+        moveQueue = new ArrayDeque<int[]>();
         this.state = state;
     }
 
     public void move(GameState state) {
-        //LineDrawing.drawLine(getXPos(), getYPos(), state.getPlayer().getXPos(), state.getPlayer().getYPos(), this);
-        if(hasLineOfSight()) {
-            System.out.println("has line of sight");
-            // Update the last known player position
-            lastPlayerPos = new int[] {state.getPlayer().getXPos(), state.getPlayer().getYPos()};
+        ArrayList<int[]> lineOfSight = getLineToPlayer();
+
+        if(hasLineOfSight(lineOfSight)) {
+            System.out.println("Has LOS");
+            // Add all points in the line of sight to the move queue
+            moveQueue = new ArrayDeque<int[]>();
+            for(int[] point: lineOfSight) {
+                moveQueue.add(point);
+            }
         }
 
-        if(lastPlayerPos != null) {
-            // Some pathfinding algorithm goes here
+
+        if(moveQueue.size() > 0) {
+            System.out.println("Next move is: " + moveQueue.peekFirst()[0] + "," + moveQueue.peekFirst()[1]);
+
+            boolean diagonal = getXPos() - moveQueue.peekFirst()[0] != 0 && getYPos() - moveQueue.peekFirst()[1] != 0;
+            if( diagonal && Math.abs(state.getPlayer().getXPos() - getXPos()) <= 1 &&
+                    Math.abs(state.getPlayer().getYPos() - getYPos()) <= 1) {
+
+                System.out.println("Player is Close");
+                if(lastPlayerPosition != null) {
+                    moveQueue.addFirst(new int[] {lastPlayerPosition[0], lastPlayerPosition[1]});
+                }
+
+
+            }
+            if(diagonal) {
+                // If the next point is diagonal (both x and y value changes)
+                //add a move to the beginning of the queue that is cardinal
+                System.out.println("Fixing Diagonal Move");
+
+
+                
+                // Try to move horizontally to fix the diagonal
+                // If that's not a valid move, move vertically
+                if(state.isEmptySpace(moveQueue.peekFirst()[0], getYPos())) {
+                    moveQueue.addFirst(new int[] {moveQueue.peekFirst()[0], getYPos()});
+                } else if (state.isEmptySpace(getXPos(), moveQueue.peekFirst()[1])) {
+                    moveQueue.addFirst(new int[] {getXPos(), moveQueue.peekFirst()[1]});
+                }
+                    
+            }
+
+
+            // Get the next point to move to in the grid and move there
+            int[] point = moveQueue.pollFirst();
+            
+            if(state.isEmptySpace(point[0], point[1])) {
+                setXPos(point[0]);
+                setYPos(point[1]);
+            } else if (state.getAtPos(point[0], point[1]) instanceof Player) {
+                Player p = (Player) state.getAtPos(point[0], point[1]);
+                p.takeDamage(getAttack());
+
+            }
+
+            lastPlayerPosition = new int[] {state.getPlayer().getXPos(), state.getPlayer().getYPos()};
         }
+        
+
         
     
     }
-
-    private boolean hasLineOfSight() {
+    // Gives line of sight to player, goes through walls
+    private ArrayList<int[]> getLineToPlayer() {
         // Bresenham's Line Algorithm from
         // http://www.roguebasin.com/index.php?title=Bresenham%27s_Line_Algorithm
         int x0 = getXPos();
@@ -98,10 +153,20 @@ public abstract class AICreature extends Creature {
         if(swapped) {
             Collections.reverse(lineOfSight);
         }
+        lineOfSight.remove(0);
+        
+        return lineOfSight;
+    }
 
+    private boolean hasLineOfSight(ArrayList<int[]> lineOfSight) {
+        if(lineOfSight.size() > sightRange) {
+            return false;
+        }
         for(int[] point: lineOfSight) {
-            if(state.getAtPos(point[0], point[1]) instanceof Wall) {
-                // A wall is blocking the line of sight
+            if( state.getAtPos(point[0], point[1]) != null && 
+                !(state.getAtPos(point[0], point[1]) instanceof Player) &&
+                    (state.getAtPos(point[0], point[1]) != this)  ) {
+                // Something is blocking the way
                 return false;
             }
         }
