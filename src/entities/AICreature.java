@@ -153,9 +153,13 @@ public abstract class AICreature extends Creature {
     }
 
     private boolean hasLineOfSight(ArrayList<int[]> lineOfSight) {
+        // If the line of sight is too long
         if(lineOfSight.size() > sightRange) {
             return false;
         }
+        
+        // Go through the points in the line of sight
+        // Check if there is anything blocking the way
         for(int[] point: lineOfSight) {
             if( state.getAtPos(point[0], point[1]) != null && 
                 !(state.getAtPos(point[0], point[1]) instanceof Player) &&

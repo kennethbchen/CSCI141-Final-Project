@@ -16,6 +16,7 @@ public class GameController extends JPanel {
     private final int RENDER_GRID_SIZE = 15;
     private final int SPRITE_SIZE = 16;
     private final int GRID_LINE_WEIGHT = 3;
+    
 
     GameState state;
 
@@ -47,7 +48,7 @@ public class GameController extends JPanel {
     }
 
     public void loseGame() {
-        //playerLost = true;
+        playerLost = true;
     }
 
     @Override
@@ -101,12 +102,12 @@ public class GameController extends JPanel {
 
         // Box lengths for grid is always a proportion of height and grid cell size
         int boxLength = (int)( screenHeight / RENDER_GRID_SIZE);
-        int padding = (int) ((screenWidth - (boxLength * RENDER_GRID_SIZE)) / 2);
+        int horizontalScreenPadding = (int) ((screenWidth - (boxLength * RENDER_GRID_SIZE)) / 2);
 
         // Origins in game state space
         int renderOriginX = state.getPlayer().getXPos() - RENDER_GRID_SIZE / 2;
         int renderOriginY = state.getPlayer().getYPos() - RENDER_GRID_SIZE / 2;
-
+        
         // Loops through game state space
         // rows and columns are game state space (array indexes)
         // row/column - renderOriginX/Y are screen space coordinates
@@ -120,7 +121,7 @@ public class GameController extends JPanel {
                     // Inside the board, draw grid
                     graphics.setBackground(Color.WHITE);
                     
-                    graphics.drawRect(( (column - renderOriginX) * boxLength) + padding, (row - renderOriginY) * boxLength, boxLength, boxLength);
+                    graphics.drawRect(( (column - renderOriginX) * boxLength) + horizontalScreenPadding, (row - renderOriginY) * boxLength, boxLength, boxLength);
 
                     // If the index (column,row) has something in it (Player, wall, enemy, whatever)
                     // Draw a scaled image
@@ -133,13 +134,36 @@ public class GameController extends JPanel {
                         final AffineTransformOp ato = new AffineTransformOp(transform, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
                         scaled = ato.filter(state.getBoard()[column][row].getSprite(), scaled);
     
-                        graphics.drawImage(scaled, ((column - renderOriginX) * boxLength) + padding, (row - renderOriginY) * boxLength, this);
+                        graphics.drawImage(scaled, ((column - renderOriginX) * boxLength) + horizontalScreenPadding, (row - renderOriginY) * boxLength, this);
 
                         // Rendering health bar
-                        if(state.getAtPos(column, row) instanceof Creature) {
+                        if(state.getAtPos(column, row) instanceof AICreature) {
                             Creature thing = (Creature) state.getAtPos(column, row);
+                            // Only render if health is not max
                             if(thing.getHealth() != thing.getMaxHealth()) {
-                                // Render health function here, Scale independant
+                                int horizontalPadding = (int) (boxLength * .10);
+                                int verticalPadding = (int) (boxLength * .10);
+                                
+
+                                // Screen Space Coordinates
+                                int healthOriginX = ((column - renderOriginX) * boxLength) + horizontalScreenPadding + horizontalPadding;
+                                int healthOriginY = ((row - renderOriginY) * boxLength) + verticalPadding;
+
+                                int barWidth = boxLength - (horizontalPadding * 2);
+                                int healthBarHeight = (int) (boxLength * .20);
+                                
+                                // Draw Health Remaining as a proportion of max health
+                                graphics.setColor(Color.RED);
+                                graphics.fillRect( healthOriginX, healthOriginY, (int) ( ((double) thing.getHealth() / thing.getMaxHealth()) * barWidth), healthBarHeight);
+                                
+
+                                // Draw Bounding rectangle
+                                graphics.setColor(Color.BLACK);
+                                graphics.setStroke(new BasicStroke(3));
+                                graphics.drawRect( healthOriginX, healthOriginY, barWidth, healthBarHeight);
+                                graphics.setStroke(new BasicStroke(GRID_LINE_WEIGHT));
+
+                                graphics.setColor(Color.GRAY);
                             }
                         }
                     }
@@ -148,7 +172,7 @@ public class GameController extends JPanel {
                     // Outside the board, fill gray like the walls
                     graphics.setBackground(Color.GRAY);
                     // Hard Code modify the rectangle dimensions a little to make it flush with the rest of the grid
-                    graphics.fillRect(((column - renderOriginX) * boxLength) + padding - 1, (row - renderOriginY) * boxLength - 1, boxLength + 3, boxLength + 3);
+                    graphics.fillRect(((column - renderOriginX) * boxLength) + horizontalScreenPadding - 1, (row - renderOriginY) * boxLength - 1, boxLength + 3, boxLength + 3);
                 }
 
                 
@@ -173,10 +197,6 @@ public class GameController extends JPanel {
         graphics.drawString("Game Over", (int)(width/2), (int)(height/2));
 
 
-
-    }
-
-    private void renderHealth(Creature creature) {
 
     }
 

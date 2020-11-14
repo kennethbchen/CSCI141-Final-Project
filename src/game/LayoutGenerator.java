@@ -34,7 +34,6 @@ public class LayoutGenerator {
 
 
     // A layout is a configuration of rooms.
-    // Layout generation concept (implementation by me) from https://github.com/Miziziziz/ThineCometh
     public static char[][] generateLayout() {
         int maxRooms = 10;
         int keyRooms = 0;
@@ -58,6 +57,7 @@ public class LayoutGenerator {
 
         // Randomly select one of the possible spaces and add appropritte possible spaces
         // Do this until maxRooms have been placed
+        // Layout generation concept (implementation by me) from https://github.com/Miziziziz/ThineCometh
         for(int roomsPlaced = 1; roomsPlaced <= maxRooms; roomsPlaced++) {
             int randIndex = rand.nextInt(possibleSpaces.size()); // (0, size]
             int[] point = possibleSpaces.remove(randIndex);

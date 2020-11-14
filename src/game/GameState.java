@@ -26,7 +26,7 @@ public class GameState {
         enemies = new ArrayList<AICreature>();
 
         // Initialization of the game board is handled by BoardGenerator
-        BoardGenerator.generateTestFloor(this);
+        BoardGenerator.generateFloor(this);
 
     }
 
@@ -129,6 +129,7 @@ public class GameState {
                 // It's alive, let it move
                 int prevX = enemies.get(i).getXPos();
                 int prevY = enemies.get(i).getYPos();
+                // Enemy uses its own AI to move
                 enemies.get(i).move(this);
                 updateEntityPosition(enemies.get(i), prevX, prevY);
             }
