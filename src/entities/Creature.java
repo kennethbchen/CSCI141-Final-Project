@@ -35,8 +35,7 @@ public abstract class Creature extends Entity {
             // Inner Math.max for if defense is higher than damage ammount. prevents negative damage taken.
             // If defense is greater than damageAmount, then 1 damage is taken
             // Outer Math.max for if damage taken is less than 0. Prevents negative health.
-            int newHealth = damageAmount - defense > 0 ? Math.max(0, health - Math.max(1, damageAmount - defense)) : Math.max(0, health - 1));
-            health = newHealth;
+            health = Math.max(0, health - Math.max(1, damageAmount - defense));
 
 
         }
