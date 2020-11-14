@@ -26,7 +26,7 @@ public class GameState {
         enemies = new ArrayList<AICreature>();
 
         // Initialization of the game board is handled by BoardGenerator
-        BoardGenerator.generateFloor(this);
+        BoardGenerator.generateTestFloor(this);
 
     }
 

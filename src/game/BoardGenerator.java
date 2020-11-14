@@ -48,7 +48,7 @@ public class BoardGenerator {
 
     // Test floor with stuff in it to test mechanics
     public static void generateTestFloor(GameState state) {
-        state.setBoard(new Entity[8][8]);
+        state.setBoard(new Entity[16][16]);
         state.addEntity(state.getPlayer(), 1, 1);
         state.getPlayer().takeDamage(5);
         

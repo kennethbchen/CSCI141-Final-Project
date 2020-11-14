@@ -15,6 +15,7 @@ public class GameController extends JPanel {
 
     private final int RENDER_GRID_SIZE = 15;
     private final int SPRITE_SIZE = 16;
+    private final int GRID_LINE_WEIGHT = 3;
 
     GameState state;
 
@@ -46,12 +47,13 @@ public class GameController extends JPanel {
     }
 
     public void loseGame() {
-        playerLost = true;
+        //playerLost = true;
     }
 
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
+        
 
         // If the game is started
         if (inGame) {
@@ -60,6 +62,10 @@ public class GameController extends JPanel {
         } else {
             // Else draw the title screen
             drawTitle(g);
+        }
+
+        if(playerLost) {
+            drawLose(g);
         }
 
     }
@@ -81,6 +87,7 @@ public class GameController extends JPanel {
     private void drawGame(Graphics g) {
         // General Graphics2D Boilerplate from http://zetcode.com/javagames/basics/
         Graphics2D graphics = (Graphics2D) g;
+        
         RenderingHints rh = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         rh.put(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
         graphics.setRenderingHints(rh);
@@ -88,6 +95,9 @@ public class GameController extends JPanel {
         Dimension size = getSize();
         double screenWidth = size.getWidth();
         double screenHeight = size.getHeight();
+
+        // Set Line Weight of strokes
+        graphics.setStroke(new BasicStroke(GRID_LINE_WEIGHT));
 
         // Box lengths for grid is always a proportion of height and grid cell size
         int boxLength = (int)( screenHeight / RENDER_GRID_SIZE);
@@ -109,6 +119,7 @@ public class GameController extends JPanel {
                 if (state.inBoard(column, row)) {
                     // Inside the board, draw grid
                     graphics.setBackground(Color.WHITE);
+                    
                     graphics.drawRect(( (column - renderOriginX) * boxLength) + padding, (row - renderOriginY) * boxLength, boxLength, boxLength);
 
                     // If the index (column,row) has something in it (Player, wall, enemy, whatever)
@@ -136,8 +147,8 @@ public class GameController extends JPanel {
                 } else {
                     // Outside the board, fill gray like the walls
                     graphics.setBackground(Color.GRAY);
-                    // Add 1 to the length of the gray rectangles because they were too small?
-                    graphics.fillRect(((column - renderOriginX) * boxLength) + padding, (row - renderOriginY) * boxLength, boxLength + 1, boxLength + 1);
+                    // Hard Code modify the rectangle dimensions a little to make it flush with the rest of the grid
+                    graphics.fillRect(((column - renderOriginX) * boxLength) + padding - 1, (row - renderOriginY) * boxLength - 1, boxLength + 3, boxLength + 3);
                 }
 
                 
@@ -146,6 +157,23 @@ public class GameController extends JPanel {
 
         // Update the UI with new player stats
         updateInterface();
+    }
+
+    private void drawLose(Graphics g) {
+        // General Graphics2D Boilerplate from http://zetcode.com/javagames/basics/
+        Graphics2D graphics = (Graphics2D) g;
+        RenderingHints rh = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        rh.put(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+        graphics.setRenderingHints(rh);
+
+        Dimension size = getSize();
+        double width = size.getWidth();
+        double height = size.getHeight();
+
+        graphics.drawString("Game Over", (int)(width/2), (int)(height/2));
+
+
+
     }
 
     private void renderHealth(Creature creature) {

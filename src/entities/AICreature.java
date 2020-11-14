@@ -28,7 +28,6 @@ public abstract class AICreature extends Creature {
         ArrayList<int[]> lineOfSight = getLineToPlayer();
 
         if(hasLineOfSight(lineOfSight)) {
-            System.out.println("Has LOS");
             // Add all points in the line of sight to the move queue
             moveQueue = new ArrayDeque<int[]>();
             for(int[] point: lineOfSight) {
@@ -38,13 +37,12 @@ public abstract class AICreature extends Creature {
 
 
         if(moveQueue.size() > 0) {
-            System.out.println("Next move is: " + moveQueue.peekFirst()[0] + "," + moveQueue.peekFirst()[1]);
 
+            // If the next point is diagonal (both x and y value changes)
             boolean diagonal = getXPos() - moveQueue.peekFirst()[0] != 0 && getYPos() - moveQueue.peekFirst()[1] != 0;
             if( diagonal && Math.abs(state.getPlayer().getXPos() - getXPos()) <= 1 &&
                     Math.abs(state.getPlayer().getYPos() - getYPos()) <= 1) {
 
-                System.out.println("Player is Close");
                 if(lastPlayerPosition != null) {
                     moveQueue.addFirst(new int[] {lastPlayerPosition[0], lastPlayerPosition[1]});
                 }
@@ -52,12 +50,8 @@ public abstract class AICreature extends Creature {
 
             }
             if(diagonal) {
-                // If the next point is diagonal (both x and y value changes)
                 //add a move to the beginning of the queue that is cardinal
-                System.out.println("Fixing Diagonal Move");
 
-
-                
                 // Try to move horizontally to fix the diagonal
                 // If that's not a valid move, move vertically
                 if(state.isEmptySpace(moveQueue.peekFirst()[0], getYPos())) {
