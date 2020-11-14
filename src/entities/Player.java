@@ -10,6 +10,7 @@ import entities.Interactable;
 public class Player extends Creature {
 
     private int keys;
+    
 
     public Player() {
         // Default Stats

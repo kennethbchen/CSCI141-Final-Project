@@ -16,6 +16,12 @@ public abstract class Creature extends Entity {
         return health;
     }
 
+    protected void setHealth(int newHealth) {
+        if(newHealth >= 0 && newHealth <= maxHealth) {
+            health = newHealth;
+        }
+    }
+
     public void heal(int healAmount) {
         if(healAmount >= 1) {
             // Prevents healing past maxHealth
@@ -27,11 +33,11 @@ public abstract class Creature extends Entity {
     public void takeDamage(int damageAmount) {
         if(damageAmount >= 1) {
             // Inner Math.max for if defense is higher than damage ammount. prevents negative damage taken.
+            // If defense is greater than damageAmount, then 1 damage is taken
             // Outer Math.max for if damage taken is less than 0. Prevents negative health.
-            //System.out.println(health + " health");
-            //System.out.println(health - Math.max(0, health - Math.max(0, damageAmount - defense)) + " damage taken");
-            health = Math.max(0, health - Math.max(0, damageAmount - defense));
-            //System.out.println(health + " health");
+            int newHealth = damageAmount - defense > 0 ? Math.max(0, health - Math.max(1, damageAmount - defense)) : Math.max(0, health - 1));
+            health = newHealth;
+
 
         }
     }

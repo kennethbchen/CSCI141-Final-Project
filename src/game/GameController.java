@@ -45,6 +45,10 @@ public class GameController extends JPanel {
         repaint();
     }
 
+    public void loseGame() {
+        playerLost = true;
+    }
+
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -58,10 +62,6 @@ public class GameController extends JPanel {
             drawTitle(g);
         }
 
-    }
-
-    public void loseGame() {
-        playerLost = true;
     }
 
     private void drawTitle(Graphics g) {
@@ -169,7 +169,7 @@ public class GameController extends JPanel {
         public void keyPressed(KeyEvent e) {
             
             // Game inputs
-            if(inGame) {
+            if(inGame && !playerLost) {
                 int prevX = state.getPlayer().getXPos();
                 int prevY = state.getPlayer().getYPos();
 
@@ -196,11 +196,19 @@ public class GameController extends JPanel {
                     // Update position on the board
                     state.updateEntityPosition(state.getPlayer(), prevX, prevY);
                     state.takeTurn();
+
+                    if(state.getPlayer().getHealth() == 0) {
+                        // If player is dead, end the game
+                        loseGame();
+                    }
                     repaint();
                 
                 }
                 
-            } else {
+            } else if (playerLost) {
+                startGame();
+            }
+            else {
                 // Title Screen inputs
                 startGame();
             }
