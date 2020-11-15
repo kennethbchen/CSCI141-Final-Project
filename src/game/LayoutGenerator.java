@@ -8,12 +8,13 @@ public class LayoutGenerator {
 
     // Layout Constants
 
-    public static final int MAX_LAYOUT_SIZE = 6; // Max layout is nxn grid of rooms
+    public static final int MAX_LAYOUT_SIZE = 8; // Max layout is nxn grid of rooms
     
     private static final int MIN_ROOMS = 8;
     private static final int MIN_TREASURE_ROOMS = 2;
     private static final int MIN_NORMAL_ROOMS = 2;
     private static final int MIN_ENEMY_ROOMS = 2;
+    private static final int MAX_DOOR_ROOMS = 2;
 
     // All three have to add to 1
     private static final double TREASURE_ROOM_CHANCE = .10;
@@ -35,7 +36,7 @@ public class LayoutGenerator {
 
     // A layout is a configuration of rooms.
     public static char[][] generateLayout() {
-        int maxRooms = 10;
+        int maxRooms = 12;
         int keyRooms = 0;
         int doorRooms = 0;
         
@@ -48,8 +49,8 @@ public class LayoutGenerator {
         ArrayList<int[]> possibleSpaces = new ArrayList<int[]>();
 
         // Select one point from the middle square of the layout to be the start
-        int startX = rand.nextInt(MAX_LAYOUT_SIZE - 4) + 2;
-        int startY = rand.nextInt(MAX_LAYOUT_SIZE - 4) + 2;
+        int startX = rand.nextInt(MAX_LAYOUT_SIZE - 5 ) + 2;
+        int startY = rand.nextInt(MAX_LAYOUT_SIZE - 5) + 2;
         layout[startX][startY] = 's';
 
         // Add spaces adjacent to the start point to the possiblRooms list
@@ -86,7 +87,8 @@ public class LayoutGenerator {
                         randomNumber <= TREASURE_ROOM_CHANCE + ENEMY_ROOM_CHANCE) { // (.10, .5]
                     layout[point[0]][point[1]] = ENEMY;
                 } else if ( roomsPlaced < 8 && randomNumber > TREASURE_ROOM_CHANCE + ENEMY_ROOM_CHANCE &&
-                    randomNumber <= TREASURE_ROOM_CHANCE + ENEMY_ROOM_CHANCE + DOOR_ROOM_CHANCE) { // (.5, .70]
+                    randomNumber <= TREASURE_ROOM_CHANCE + ENEMY_ROOM_CHANCE + DOOR_ROOM_CHANCE &&
+                        doorRooms < MAX_DOOR_ROOMS) { // (.5, .70]
                     layout[point[0]][point[1]] = DOOR;
                     doorRooms++;
                 } else { // (.25, 1)

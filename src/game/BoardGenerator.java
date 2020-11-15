@@ -32,6 +32,7 @@ public class BoardGenerator {
     private static final char STAIRS = 's';
     private static final char SWORD = 'a';
     private static final char SHIELD = 'd';
+    private static final char POTION = '*';
     private static final char SLIME = '1';
     private static final char DOOR = '=';
     private static final char KEY = '^';
@@ -174,6 +175,9 @@ public class BoardGenerator {
                                 break;
                             case SHIELD:
                                 e = new Shield(state);
+                                break;
+                            case POTION:
+                                e = new Potion(state);
                                 break;
                             case SLIME:
                                 e = new Slime(state);           

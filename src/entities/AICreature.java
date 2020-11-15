@@ -71,7 +71,9 @@ public abstract class AICreature extends Creature {
             if(state.isEmptySpace(point[0], point[1])) {
                 setXPos(point[0]);
                 setYPos(point[1]);
-            } else if (state.getAtPos(point[0], point[1]) instanceof Player) {
+            } else if (state.getAtPos(point[0], point[1]) instanceof Player &&
+                    (point[0] == getXPos() || point[1] == getYPos())) {
+                // If the player is adjacent
                 Player p = (Player) state.getAtPos(point[0], point[1]);
                 p.takeDamage(getAttack());
 
