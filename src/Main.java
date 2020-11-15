@@ -34,8 +34,8 @@ public class Main extends JFrame {
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setTitle("Game");
-        setSize(760, 830);
-        setResizable(true);
+        setSize(830, 900);
+        setResizable(false);
         setLayout(new GridBagLayout());
 
         

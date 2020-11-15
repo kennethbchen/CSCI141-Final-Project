@@ -3,7 +3,6 @@ package entities;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Queue;
 
 import game.GameState;
 
@@ -42,8 +41,11 @@ public abstract class AICreature extends Creature {
             boolean diagonal = getXPos() - moveQueue.peekFirst()[0] != 0 && getYPos() - moveQueue.peekFirst()[1] != 0;
             if( diagonal && Math.abs(state.getPlayer().getXPos() - getXPos()) <= 1 &&
                     Math.abs(state.getPlayer().getYPos() - getYPos()) <= 1) {
-
-                if(lastPlayerPosition != null) {
+                // If the player is one square away
+                
+                if(lastPlayerPosition != null && Math.abs(lastPlayerPosition[0] - getXPos()) <= 1 &&
+                Math.abs(lastPlayerPosition[1] - getYPos()) <= 1) {
+                    // If there is a recorded last position of the player and that position is close
                     moveQueue.addFirst(new int[] {lastPlayerPosition[0], lastPlayerPosition[1]});
                 }
 

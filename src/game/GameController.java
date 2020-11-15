@@ -82,7 +82,21 @@ public class GameController extends JPanel {
         double width = size.getWidth();
         double height = size.getHeight();
 
-        graphics.drawString("Title Screen", (int)(width/2), (int)(height/2));
+        // Draw Text
+        // All text is hard coded for the current default window size
+        graphics.setColor(Color.BLACK);
+        Font prevFont = getFont();
+        
+        //Hard-Coded placement for the default window size
+        graphics.setFont(new Font("TimesRoman", Font.PLAIN, (int) (height * .1)) );
+        graphics.drawString("The Dungeon of OOP", (int) (width * .07) , (int) (height / 2));
+        
+
+        graphics.setFont(new Font("TimesRoman", Font.PLAIN, (int) (height * .03)) );
+        graphics.drawString("Press any key to play", (int) (width * .375) , (int) (height * .6));
+
+        graphics.setFont(prevFont);
+        graphics.setColor(Color.GRAY);
     }
 
     private void drawGame(Graphics g) {
@@ -136,7 +150,7 @@ public class GameController extends JPanel {
     
                         graphics.drawImage(scaled, ((column - renderOriginX) * boxLength) + horizontalScreenPadding, (row - renderOriginY) * boxLength, this);
 
-                        // Rendering health bar
+                        // Rendering health bar for enemies
                         if(state.getAtPos(column, row) instanceof AICreature) {
                             Creature thing = (Creature) state.getAtPos(column, row);
                             // Only render if health is not max
@@ -194,10 +208,35 @@ public class GameController extends JPanel {
         double width = size.getWidth();
         double height = size.getHeight();
 
-        graphics.drawString("Game Over", (int)(width/2), (int)(height/2));
+        
 
+        // Box lengths for grid is always a proportion of height and grid cell size
+        int boxLength = (int)( height / RENDER_GRID_SIZE);
+        int horizontalScreenPadding = (int) ((width - (boxLength * RENDER_GRID_SIZE)) / 2);
 
+        int loseBoxOriginX = 3 * boxLength + horizontalScreenPadding;
+        int loseBoxOriginY = 3 * boxLength;
+        int loseBoxWidth = (RENDER_GRID_SIZE - 6) * boxLength;
+        int loseBoxHeight = (RENDER_GRID_SIZE - 6) * boxLength;
 
+        // Draw Box
+        graphics.setColor(Color.LIGHT_GRAY);
+        graphics.fillRect(loseBoxOriginX, loseBoxOriginY, loseBoxWidth, loseBoxHeight);
+
+        // Draw Text
+        // All text is hard coded for the current default window size
+        graphics.setColor(Color.BLACK);
+        Font prevFont = getFont();
+        
+        graphics.setFont(new Font("TimesRoman", Font.PLAIN, (int) (height * .1)) );
+        graphics.drawString("Game Over", (int) (loseBoxOriginX + (loseBoxOriginX *.19)) , (int) (height / 2));
+        
+
+        graphics.setFont(new Font("TimesRoman", Font.PLAIN, (int) (height * .03)) );
+        graphics.drawString("Press any key to play again", (int) (loseBoxOriginX + (loseBoxOriginX *.5)) , (int) (height / 2) + (int) (height * .05));
+
+        graphics.setFont(prevFont);
+        graphics.setColor(Color.GRAY);
     }
 
     private void updateInterface() {

@@ -5,7 +5,6 @@ import javax.imageio.ImageIO;
 
 
 import game.GameState;
-import entities.Interactable;
 
 public class Player extends Creature {
 
