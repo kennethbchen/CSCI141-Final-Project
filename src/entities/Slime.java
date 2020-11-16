@@ -9,10 +9,15 @@ public class Slime extends AICreature {
 
     public Slime(GameState state) {
         super(state);
-        setMaxHealth(4);
-        heal(4);
-        setAttack(1);
-        setDefense(0);
+        int maxHealth = 4 + (int) ( (state.getFloors() - 1) / 3); //Increase Max Health by one every 3 floors
+        setMaxHealth(maxHealth);
+        heal(getMaxHealth());
+        
+        int attack = 1 + (int) ( (state.getFloors() - 1) / 2); //Increase Attack by one every 2 floors
+        setAttack(attack);
+
+        int defense = 0 + (int) ( (state.getFloors() - 1) / 2); //Increase Defense by one every 2 floors
+        setDefense(defense);
     }
 
 

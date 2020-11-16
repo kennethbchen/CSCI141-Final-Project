@@ -103,6 +103,7 @@ public class LayoutGenerator {
 
         // Print the layout for debugging
         // Printing line by line, so row first, then column
+        /*
         for(int row = 0; row < MAX_LAYOUT_SIZE; row++) {
             for(int column = 0; column < MAX_LAYOUT_SIZE; column++) {
                 if(layout[column][row] != NULL_CHAR) {
@@ -115,10 +116,12 @@ public class LayoutGenerator {
             System.out.println();
         }
         System.out.println("--------");
+        */
 
-        // The last room to be chosen is the finish
+        
         return layout;
     }
+
 
     private static void addAdjacentRooms(char[][] layout, ArrayList<int[]> possibleSpaces, int x, int y){
 

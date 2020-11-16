@@ -41,10 +41,6 @@ public class GameState {
         return gameBoard;
     }
 
-    protected int getFloors() {
-        return floor;
-    }
-
     protected void setBoard(Entity[][] board) {
         gameBoard = board;
     }
@@ -72,6 +68,10 @@ public class GameState {
         }
         // Remove it from the board
         gameBoard[x][y] = null;
+    }
+
+    public int getFloors() {
+        return floor;
     }
 
     public void removeEntity(Entity e) {
